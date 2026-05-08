@@ -83,7 +83,14 @@ class LicenseManager:
                 f"Vui lòng kết nối Internet để đồng bộ lại license."
             )
 
-        return True, "OFFLINE_OK"
+        remain_days = (
+            offline_days - (now - last_sync_time).days
+        )
+
+        return True, (
+            f"OFFLINE_OK | "
+            f"Còn {remain_days} ngày cần kết nối Internet"
+        )
 
     def verify_time_rollback(self):
 
@@ -101,6 +108,9 @@ class LicenseManager:
 
         self.load()
 
+        # =========================
+        # GOOGLE SYNC
+        # =========================
         ok_sync, sync_msg = update_cache_from_google(
             self.device_id,
             self.hardware_hash
@@ -108,19 +118,41 @@ class LicenseManager:
 
         print(sync_msg)
 
+        # nếu sync thành công thì reload cache mới
         if ok_sync:
             self.load()
 
-        if self.data.get("status", "").strip().lower() != "active":
-            return False, "License đã bị khóa trên hệ thống ATG."
+        # =========================
+        # STATUS
+        # =========================
+        if self.data.get(
+            "status",
+            ""
+        ).strip().lower() != "active":
 
-        print(sync_msg)
+            return False, (
+                "License đã bị khóa trên hệ thống ATG."
+            )
 
-        if ok_sync:
-            self.load()
+        # =========================
+        # OFFLINE DAYS
+        # =========================
+        ok_offline, msg_offline = (
+            self.check_offline_days()
+        )
 
+        print(msg_offline)
+
+        if not ok_offline:
+            return False, msg_offline
+
+        # =========================
+        # HARDWARE
+        # =========================
         if not self.verify_hardware():
-            return False, "LICENSE HARDWARE INVALID"
+            return False, (
+                "LICENSE HARDWARE INVALID"
+            )
 
         return True, "LICENSE OK"
     
