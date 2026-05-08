@@ -93,5 +93,21 @@
     "note": "",
     "join_date": "2026-05-07",
     "avatar_color": "#607D8B"
+  },
+  {
+    "id": "nv1",
+    "name": "12",
+    "position": "13",
+    "department": "14",
+    "phone": "15",
+    "email": "16@email.com",
+    "camera_zone": [
+      "17"
+    ],
+    "shift": "Ca sáng (6:00 - 14:00)",
+    "status": "active",
+    "note": "",
+    "join_date": "2026-05-08",
+    "avatar_color": "#607D8B"
   }
 ]

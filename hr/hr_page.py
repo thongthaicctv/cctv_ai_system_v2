@@ -792,7 +792,7 @@ class _VideoTab(QWidget):
 
     def _update_stats(self):
         total = len(self._videos)
-        size  = sum(v.get("file_size_mb", 0) for v in self._videos)
+        size  = sum(v.get("file_size_mb") or v.get("size_mb", 0) for v in self._videos)
         cams  = len(set(v.get("camera_id", "") for v in self._videos))
         emps  = len(set(v.get("employee_id", "") for v in self._videos if v.get("employee_id") not in ("NOEMP", "", None)))
         self.c_total.set_value(total)
@@ -813,33 +813,55 @@ class _VideoTab(QWidget):
             r = self.table.rowCount()
             self.table.insertRow(r)
 
-            dur = v.get("duration_sec", 0)
-            dur_txt = f"{dur//60}:{dur%60:02d}"
-            emp = v.get("employee_name") or v.get("employee_id", "—")
+            # ── duration: dùng duration_sec (mới) hoặc duration (alias cũ) ──
+            dur     = v.get("duration_sec") or v.get("duration", 0)
+            dur_txt = f"{int(dur)//60}:{int(dur)%60:02d}"
+
+            # ── employee ──
+            emp = v.get("employee_name") or v.get("employee_id") or "—"
+
+            # ── size: ưu tiên file_size_mb, fallback size_mb (key cũ) ──
+            sz_mb = v.get("file_size_mb") or v.get("size_mb", 0)
+
+            # ── order code ──
+            order = v.get("order_code") or v.get("qr_code") or "—"
+
+            # ── thời gian: start_time ISO hoặc date+time riêng ──
+            start_iso = v.get("start_time", "")
+            if start_iso and len(start_iso) > 10:
+                time_disp = start_iso[11:16]
+                date_disp = start_iso[:10]
+            else:
+                time_disp = v.get("time", "")[:5]
+                date_disp = v.get("date", "")
 
             cam_item = QTableWidgetItem(v.get("camera_id", ""))
             cam_item.setForeground(QColor(_ACCENT))
             cam_item.setFont(QFont("Consolas", 11, QFont.Bold))
 
-            order_item = QTableWidgetItem(v.get("order_code", "—"))
+            order_item = QTableWidgetItem(order)
             order_item.setForeground(QColor(_YELLOW))
+
+            size_item = QTableWidgetItem(f"{sz_mb} MB")
+            size_item.setForeground(QColor(_ORANGE))
 
             vals = [
                 (cam_item, None),
                 (QTableWidgetItem(v.get("camera_name", "")), None),
-                (QTableWidgetItem(v.get("date", "")), None),
-                (QTableWidgetItem(v.get("start_time", "")[11:16]), None),
+                (QTableWidgetItem(date_disp), None),
+                (QTableWidgetItem(time_disp), None),
                 (QTableWidgetItem(dur_txt), None),
                 (order_item, None),
                 (QTableWidgetItem(emp), None),
                 (QTableWidgetItem(v.get("department", "—")), None),
-                (QTableWidgetItem(f"{v.get('file_size_mb',0)} MB"), None),
+                (size_item, None),
             ]
             for c, (item, _) in enumerate(vals):
                 self.table.setItem(r, c, item)
 
-            # Actions
-            full_path = os.path.join(self._storage, v.get("file_path", v.get("filename", "")))
+            # ── Actions: full path tuyệt đối ──
+            rel = v.get("file_path") or v.get("path") or v.get("filename", "")
+            full_path = os.path.normpath(os.path.join(self._storage, rel))
             aw = QWidget(); aw.setStyleSheet("background:transparent;")
             ahl = QHBoxLayout(aw); ahl.setContentsMargins(4, 2, 4, 2); ahl.setSpacing(4)
             b_play = QPushButton("▶")
@@ -861,7 +883,7 @@ class _VideoTab(QWidget):
         res = [
             v for v in self._videos
             if (not kw or any(kw in str(v.get(f, "")).lower()
-                              for f in ("camera_id","camera_name","order_code","employee_id","employee_name","filename")))
+                              for f in ("camera_id","camera_name","order_code","qr_code","employee_id","employee_name","filename","date")))
             and (cam == "Tất cả camera" or v.get("camera_id") == cam)
             and (not date or v.get("date", "").startswith(date))
             and (not order or order in v.get("order_code", "").lower())
@@ -903,8 +925,11 @@ class _VideoTab(QWidget):
             self._load()
 
     def _play(self, path: str):
+        path = os.path.normpath(path)
         if not os.path.exists(path):
-            QMessageBox.warning(self, "Không tìm thấy", f"File không tồn tại:\n{path}")
+            QMessageBox.warning(self, "Kh\u00f4ng t\u00ecm th\u1ea5y",
+                                f"File kh\u00f4ng t\u1ed3n t\u1ea1i:\n{path}\n\n"
+                                f"Ki\u1ec3m tra th\u01b0 m\u1ee5c: {self._storage}")
             return
         try:
             if sys.platform == "win32":

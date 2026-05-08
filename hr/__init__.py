@@ -5,19 +5,8 @@ from .employee_manager import (
     get_stats, get_employee_by_id,
 )
 from .video_index_manager import (
-    generate_html_report,
-    load_index,
+    build_index, scan_and_build_index, load_index,
+    generate_html_report, append_video_entry, scan_recordings,
 )
-# Import scan_and_build_index hoặc build_index tuỳ file nào có
-try:
-    from .video_index_manager import scan_and_build_index
-except ImportError:
-    from .video_index_manager import build_index as scan_and_build_index
-
-try:
-    from .video_index_manager import build_index
-except ImportError:
-    build_index = scan_and_build_index
-
 from .hr_page import HRPage
 from .qr_generator import employee_qr_bytes, make_employee_qr, save_employee_qr
