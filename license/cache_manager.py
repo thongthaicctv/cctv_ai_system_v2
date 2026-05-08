@@ -45,3 +45,16 @@ class CacheManager:
         CacheManager.save(data)
 
         return data
+    
+    @staticmethod
+    def delete():
+
+        try:
+            if CACHE_FILE.exists():
+                CACHE_FILE.unlink()
+
+            return True
+
+        except Exception as e:
+            print("CACHE DELETE FAIL:", e)
+            return False

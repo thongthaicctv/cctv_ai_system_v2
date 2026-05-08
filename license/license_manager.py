@@ -101,20 +101,18 @@ class LicenseManager:
 
         self.load()
 
-        if self.data.get("status") != "active":
-            return False, "License đã bị khóa trên hệ thống ATG."
-
-
-        ok_offline, msg_offline = self.check_offline_days()
-
-        if not ok_offline:
-            return False, msg_offline
-
-        # thử sync online từ Google Sheet
         ok_sync, sync_msg = update_cache_from_google(
             self.device_id,
             self.hardware_hash
         )
+
+        print(sync_msg)
+
+        if ok_sync:
+            self.load()
+
+        if self.data.get("status", "").strip().lower() != "active":
+            return False, "License đã bị khóa trên hệ thống ATG."
 
         print(sync_msg)
 

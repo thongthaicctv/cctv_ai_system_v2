@@ -93,19 +93,36 @@ def fetch_license_from_google(device_id):
 # =========================
 # UPDATE CACHE
 # =========================
-def update_cache_from_google(device_id, hardware_hash):
+def update_cache_from_google(
+    device_id,
+    hardware_hash
+):
 
-    data, msg = fetch_license_from_google(device_id)
+    data, msg = fetch_license_from_google(
+        device_id
+    )
 
     if not data:
         return False, msg
 
-    data["hardware_hash"] = hardware_hash
-    data["last_run_time"] = str(datetime.now())
+    # =========================
+    # ONLINE FOUND DEVICE
+    # DELETE OLD CACHE
+    # =========================
+    CacheManager.delete()
 
+    data["hardware_hash"] = hardware_hash
+
+    data["last_run_time"] = str(
+        datetime.now()
+    )
+
+    # =========================
+    # CREATE NEW CACHE
+    # =========================
     CacheManager.save(data)
 
     if data.get("status") != "active":
         return False, "LICENSE_DISABLED_BY_GOOGLE"
 
-    return True, "ATG_LICENSE_UPDATED"
+    return True, "ATG_LICENSE_UPDATED_FROM_GOOGLE"
