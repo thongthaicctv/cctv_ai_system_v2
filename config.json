@@ -1,5 +1,22 @@
 {
+    "alert_enabled": false,
     "storage_path": "D:/Video 2",
+    "record_auto_stop_seconds": 900,
+    "record_mapping": {
+        "1": [
+            "3",
+            "4"
+        ],
+        "2": [
+            "2"
+        ],
+        "3": [
+            "3"
+        ],
+        "4": [
+            "4"
+        ]
+    },
     "cameras": [
         {
             "id": "1",
@@ -37,7 +54,5 @@
             "area": "Si",
             "enabled": true
         }
-    ],
-    "alert_enabled": false,
-    "record_auto_stop_seconds": 900
+    ]
 }

@@ -5,7 +5,7 @@ from .cache_manager import CacheManager
 from .anti_rollback import AntiRollback
 
 from .google_sync import update_cache_from_google
-
+from datetime import datetime, timedelta
 class LicenseManager:
 
     def __init__(self):
@@ -16,6 +16,7 @@ class LicenseManager:
         self.data = None
 
     def load(self):
+
 
         data = CacheManager.load()
 
@@ -28,6 +29,8 @@ class LicenseManager:
         self.data = data
 
         return data
+    
+        
 
     def verify_hardware(self):
 
@@ -49,6 +52,38 @@ class LicenseManager:
         days = (datetime.now() - last_sync).days
 
         return days <= 30
+    
+
+  
+
+
+    def check_offline_days(self):
+
+        last_sync = self.data.get("last_sync")
+
+        offline_days = int(
+            self.data.get("offline_days", 30)
+        )
+
+        if not last_sync:
+            return False, "Không tìm thấy thời gian đồng bộ license."
+
+        try:
+            last_sync_time = datetime.fromisoformat(
+                str(last_sync)
+            )
+        except:
+            return False, "Dữ liệu thời gian license không hợp lệ."
+
+        now = datetime.now()
+
+        if now - last_sync_time > timedelta(days=offline_days):
+            return False, (
+                f"License đã offline quá {offline_days} ngày.\n"
+                f"Vui lòng kết nối Internet để đồng bộ lại license."
+            )
+
+        return True, "OFFLINE_OK"
 
     def verify_time_rollback(self):
 
@@ -66,6 +101,15 @@ class LicenseManager:
 
         self.load()
 
+        if self.data.get("status") != "active":
+            return False, "License đã bị khóa trên hệ thống ATG."
+
+
+        ok_offline, msg_offline = self.check_offline_days()
+
+        if not ok_offline:
+            return False, msg_offline
+
         # thử sync online từ Google Sheet
         ok_sync, sync_msg = update_cache_from_google(
             self.device_id,
@@ -81,3 +125,7 @@ class LicenseManager:
             return False, "LICENSE HARDWARE INVALID"
 
         return True, "LICENSE OK"
+    
+
+
+
