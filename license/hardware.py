@@ -54,4 +54,6 @@ def get_hardware_hash():
 def get_device_id():
     hw = get_hardware_hash().upper()
 
-    return f"CCTV-{hw[:4]}-{hw[4:8]}-{hw[8:12]}"
+    return f"ATG-{hw[:4]}-{hw[4:8]}-{hw[8:12]}"
+
+print("DEVICE ID:", get_device_id())

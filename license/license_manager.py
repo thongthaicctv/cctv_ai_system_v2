@@ -4,6 +4,7 @@ from .hardware import get_hardware_hash, get_device_id
 from .cache_manager import CacheManager
 from .anti_rollback import AntiRollback
 
+from .google_sync import update_cache_from_google
 
 class LicenseManager:
 
@@ -64,6 +65,17 @@ class LicenseManager:
     def check(self):
 
         self.load()
+
+        # thử sync online từ Google Sheet
+        ok_sync, sync_msg = update_cache_from_google(
+            self.device_id,
+            self.hardware_hash
+        )
+
+        print(sync_msg)
+
+        if ok_sync:
+            self.load()
 
         if not self.verify_hardware():
             return False, "LICENSE HARDWARE INVALID"

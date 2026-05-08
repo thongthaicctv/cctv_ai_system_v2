@@ -250,7 +250,7 @@ class CameraConfigPage(QWidget):
                 msg.setInformativeText(
                     f"Device ID:\n"
                     f"{license_manager.device_id}\n\n"
-                    f"Vui lòng liên hệ 0904143113 để mở rộng license để thêm camera mới."
+                    f"Vui lòng liên hệ 0904143113 để mở rộng license và thêm camera mới."
                 )
                 msg.setStyleSheet("""
                 QMessageBox {
