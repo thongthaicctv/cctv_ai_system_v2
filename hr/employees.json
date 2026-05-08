@@ -109,5 +109,21 @@
     "note": "",
     "join_date": "2026-05-08",
     "avatar_color": "#607D8B"
+  },
+  {
+    "id": "nv2",
+    "name": "Thac Trung",
+    "position": "Bố Tướng",
+    "department": "Quản lý",
+    "phone": "0987654321",
+    "email": "1@gmail.com",
+    "camera_zone": [
+      "Ecom"
+    ],
+    "shift": "Ca sáng (6:00 - 14:00)",
+    "status": "active",
+    "note": "",
+    "join_date": "2026-05-08",
+    "avatar_color": "#607D8B"
   }
 ]

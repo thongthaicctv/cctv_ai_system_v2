@@ -86,6 +86,15 @@ _BTN_GREEN = f"""
     }}
     QPushButton:hover {{ background:#4ade80; }}
 """
+_BTN_BLUE = f"""
+    QPushButton {{
+        background:#2563eb; color:#fff; border:none;
+        padding:5px 12px; border-radius:6px; font-weight:700;
+        text-align:center;
+    }}
+    QPushButton:hover {{ background:#3b82f6; }}
+
+"""
 _BTN_DANGER = f"""
     QPushButton {{
         background:{_RED}; color:#fff; border:none;
@@ -605,32 +614,73 @@ class _HRTab(QWidget):
                     item.setFont(QFont("Segoe UI", 11, QFont.Bold))
                 self.table.setItem(r, c, item)
 
+            
             # Action buttons
             aw = QWidget()
             aw.setStyleSheet("background:transparent;")
+
             ahl = QHBoxLayout(aw)
             ahl.setContentsMargins(4, 2, 4, 2)
             ahl.setSpacing(6)
-            b_edit = QPushButton("✏️")
-            b_edit.setFixedSize(28, 26)
-            b_edit.setToolTip("Sửa")
+
+            b_edit = QPushButton("Sửa")
+            b_edit.setFixedSize(50, 26)
+            b_edit.setStyleSheet("""
+            QPushButton{
+                background:#1e293b;
+                color:#93c5fd;
+                border:1px solid #334155;
+                border-radius:5px;
+                font-size:12px;
+                font-weight:700;
+            }
+            QPushButton:hover{
+                background:#2563eb;
+                color:white;
+            }
+            """)
             b_edit.clicked.connect(lambda _, e=emp: self._edit(e))
-            b_del  = QPushButton("🗑")
-            b_del.setFixedSize(28, 26)
-            b_del.setToolTip("Xoá")
+
+            b_del = QPushButton("Xoá")
+            b_del.setFixedSize(50, 26)
+            b_del.setStyleSheet("""
+            QPushButton{
+                background:#3b1111;
+                color:#fca5a5;
+                border:1px solid #7f1d1d;
+                border-radius:5px;
+                font-size:12px;
+                font-weight:700;
+            }
+            QPushButton:hover{
+                background:#dc2626;
+                color:white;
+            }
+            """)
             b_del.clicked.connect(lambda _, eid=emp["id"]: self._delete(eid))
+
+            b_qr = QPushButton("QR")
+            b_qr.setFixedSize(50, 26)
+            b_qr.setStyleSheet("""
+            QPushButton{
+                background:#1e1b4b;
+                color:#c4b5fd;
+                border:1px solid #4338ca;
+                border-radius:5px;
+                font-size:12px;
+                font-weight:700;
+            }
+            QPushButton:hover{
+                background:#4338ca;
+                color:white;
+            }
+            """)
+            b_qr.clicked.connect(lambda _, e=emp: self._show_qr(e))
+
             ahl.addWidget(b_edit)
             ahl.addWidget(b_del)
-            b_qr = QPushButton("\u25a3")
-            b_qr.setFixedSize(28, 26)
-            b_qr.setToolTip("Xem / Xu\u1ea5t QR")
-            b_qr.setStyleSheet(
-                f"QPushButton{{background:#1a1a2e;color:{_ACCENT};border:1px solid {_BORDER};"
-                f"border-radius:4px;font-weight:700;font-size:13px;}}"
-                f"QPushButton:hover{{border-color:{_ACCENT};;}}"
-            )
-            b_qr.clicked.connect(lambda _, e=emp: self._show_qr(e))
             ahl.addWidget(b_qr)
+
             self.table.setCellWidget(r, 8, aw)
 
     def _show_qr(self, emp: dict):
@@ -870,7 +920,8 @@ class _VideoTab(QWidget):
             b_play.clicked.connect(lambda _, p=full_path: self._play(p))
             b_dl = QPushButton("⬇")
             b_dl.setFixedSize(28, 26)
-            b_dl.setToolTip("Tải về")
+            b_dl.setStyleSheet(_BTN_BLUE.replace("padding:5px 12px", "padding:0"))
+            
             b_dl.clicked.connect(lambda _, p=full_path, n=v.get("filename",""): self._download(p, n))
             ahl.addWidget(b_play); ahl.addWidget(b_dl)
             self.table.setCellWidget(r, 9, aw)

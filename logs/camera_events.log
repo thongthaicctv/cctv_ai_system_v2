@@ -635,3 +635,41 @@
 2026-05-08 06:55:54 | DEBUG-1 REC STOP test3
 2026-05-08 07:05:54 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
 2026-05-08 07:05:55 | DEBUG-1 ONLINE
+2026-05-08 07:34:16 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 07:34:17 | DEBUG-1 ONLINE
+2026-05-08 07:53:04 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 07:53:05 | DEBUG-1 ONLINE
+2026-05-08 07:53:33 | Preview DEBUG-1
+2026-05-08 07:54:06 | CMD s01trung
+2026-05-08 07:54:08 | DEBUG-1 START trung
+2026-05-08 07:54:18 | CMD s01emp:trung
+2026-05-08 07:54:34 | CMD s01stop
+2026-05-08 07:54:34 | DEBUG-1 REC STOP trung
+2026-05-08 08:05:58 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:05:59 | DEBUG-1 ONLINE
+2026-05-08 08:09:24 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:09:25 | DEBUG-1 ONLINE
+2026-05-08 08:11:40 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:11:41 | DEBUG-1 ONLINE
+2026-05-08 08:12:49 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:12:50 | DEBUG-1 ONLINE
+2026-05-08 08:13:32 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:13:33 | DEBUG-1 ONLINE
+2026-05-08 08:14:07 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:14:08 | DEBUG-1 ONLINE
+2026-05-08 08:15:20 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:15:21 | DEBUG-1 ONLINE
+2026-05-08 08:18:07 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:18:07 | DEBUG-1 ONLINE
+2026-05-08 08:18:57 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:18:58 | DEBUG-1 ONLINE
+2026-05-08 08:21:05 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:21:06 | DEBUG-1 ONLINE
+2026-05-08 08:22:58 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:22:59 | DEBUG-1 ONLINE
+2026-05-08 08:23:43 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:23:44 | DEBUG-1 ONLINE
+2026-05-08 08:31:07 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:31:08 | DEBUG-1 ONLINE
+2026-05-08 08:31:53 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-08 08:31:54 | DEBUG-1 ONLINE
