@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from core.logger import write_license_log
+
 from .hardware import get_hardware_hash, get_device_id
 from .cache_manager import CacheManager
 from .anti_rollback import AntiRollback
@@ -130,9 +132,15 @@ class LicenseManager:
             ""
         ).strip().lower() != "active":
 
-            return False, (
+            msg = (
+                "LICENSE BLOCKED | "
                 "License đã bị khóa trên hệ thống ATG."
             )
+
+            print(msg)
+            write_license_log(msg)
+
+            return False, msg
 
         # =========================
         # OFFLINE DAYS
@@ -142,6 +150,7 @@ class LicenseManager:
         )
 
         print(msg_offline)
+        write_license_log(msg_offline)
 
         if not ok_offline:
             return False, msg_offline
