@@ -12,9 +12,13 @@ from PySide6.QtWidgets import (
     QComboBox, QDialog, QFileDialog, QFormLayout,
     QFrame, QHBoxLayout, QHeaderView, QLabel,
     QLineEdit, QMessageBox, QPushButton, QSizePolicy,
+    QCheckBox, QSpinBox,
     QStackedWidget, QTableWidget, QTableWidgetItem,
     QVBoxLayout, QWidget,
 )
+
+
+from core.config_manager import load_config
 
 from hr.qr_generator import employee_qr_bytes, make_employee_qr, save_employee_qr
 from hr.employee_manager import (
@@ -280,6 +284,7 @@ class _EmployeeDialog(QDialog):
 
         rl.addStretch()
         outer.addWidget(right, stretch=2)
+
 
     # ── QR helpers ──────────────────────────────
     def _set_qr_placeholder(self):
@@ -745,8 +750,9 @@ class _VideoTab(QWidget):
         super().__init__()
         self.setStyleSheet(_BASE)
         self._thread: _RebuildThread | None = None
-        from core.config_manager import load_config
-        self._storage = load_config().get("storage_path", "records")
+        
+        self._config = load_config()
+        self._storage = self._config.get("storage_path", "records")
         self._videos: list = []
         self._build()
         self._load()
@@ -763,6 +769,41 @@ class _VideoTab(QWidget):
             f"font-size:18px;font-weight:700;color:#ffffff;border:none;background:transparent;"
         )
         hdr.addWidget(t)
+
+        self.chk_cleanup = QCheckBox("Xoá dữ liệu cũ")
+        self.chk_cleanup.setChecked(bool(self._config.get("cleanup_enabled", False)))
+        self.chk_cleanup.setStyleSheet("""
+        QCheckBox{
+            color:#dddddd;
+            font-size:12px;
+            font-weight:600;
+            padding:4px 8px;
+        }
+        QCheckBox::indicator{
+            width:16px;
+            height:16px;
+        }
+        """)
+        self.chk_cleanup.stateChanged.connect(self._save_cleanup_config)
+
+        self.spin_keep_days = QSpinBox()
+        self.spin_keep_days.setRange(1, 3650)
+        self.spin_keep_days.setValue(int(self._config.get("keep_index_days", 180)))
+        self.spin_keep_days.setSuffix(" ngày")
+        self.spin_keep_days.setFixedWidth(105)
+        self.spin_keep_days.setStyleSheet("""
+        QSpinBox{
+            background:#1b1b1b;
+            color:#ffffff;
+            border:1px solid #2a2a2a;
+            border-radius:6px;
+            padding:5px 8px;
+        }
+        """)
+        self.spin_keep_days.valueChanged.connect(self._save_cleanup_config)
+
+        hdr.addWidget(self.chk_cleanup)
+        hdr.addWidget(self.spin_keep_days)
         hdr.addStretch()
 
         self.btn_folder  = QPushButton("📁 Đổi thư mục")
@@ -831,6 +872,21 @@ class _VideoTab(QWidget):
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         lo.addWidget(self.table)
+
+    def _save_cleanup_config(self):
+        from core.config_manager import save_config
+
+        self._config["cleanup_enabled"] = self.chk_cleanup.isChecked()
+        self._config["keep_index_days"] = self.spin_keep_days.value()
+
+        save_config(self._config)
+
+        print(
+            "[CONFIG] cleanup_enabled =",
+            self._config["cleanup_enabled"],
+            "| keep_index_days =",
+            self._config["keep_index_days"]
+        )
 
     # ── Data ──────────────────────────────────
     def _load(self):

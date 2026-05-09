@@ -54,5 +54,7 @@
             "area": "Si",
             "enabled": true
         }
-    ]
+    ],
+    "cleanup_enabled": true,
+    "keep_index_days": 240
 }
