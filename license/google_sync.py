@@ -81,6 +81,8 @@ def fetch_license_from_google(device_id):
                 }, "GOOGLE_SYNC_OK"
 
         return None, "DEVICE_ID_NOT_FOUND"
+    
+    
 
     except Exception as e:
 

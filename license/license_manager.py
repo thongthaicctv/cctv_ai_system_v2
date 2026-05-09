@@ -43,9 +43,36 @@ class LicenseManager:
 
     def verify_expire(self):
 
-        expire = datetime.fromisoformat(self.data["expire_date"])
+        expire_text = str(
+            self.data.get("expire_date", "")
+        ).strip()
 
-        return datetime.now() <= expire
+        if not expire_text:
+            return False
+
+        formats = [
+            "%Y-%m-%d",
+            "%d/%m/%Y",
+            "%m/%d/%Y",
+        ]
+
+        expire_date = None
+
+        for fmt in formats:
+            try:
+                expire_date = datetime.strptime(
+                    expire_text,
+                    fmt
+                )
+                break
+            except:
+                pass
+
+        if not expire_date:
+            print("EXPIRE DATE INVALID:", expire_text)
+            return False
+
+        return datetime.now() <= expire_date
 
     def verify_offline_days(self):
 
@@ -120,6 +147,13 @@ class LicenseManager:
 
         print(sync_msg)
 
+        if sync_msg == "DEVICE_ID_NOT_FOUND":
+
+            return False, (
+                "DEVICE_ID chưa được kích hoạt trên hệ thống ATG.\n"
+                "Vui lòng gửi Device ID cho quản trị viên Điện thoại 0904143113."
+            )
+
         # nếu sync thành công thì reload cache mới
         if ok_sync:
             self.load()
@@ -154,6 +188,9 @@ class LicenseManager:
 
         if not ok_offline:
             return False, msg_offline
+        
+        if not self.verify_expire():
+            return False, "License đã hết hạn. Vui lòng liên hệ quản trị viên 0904143113 để gia hạn license."
 
         # =========================
         # HARDWARE

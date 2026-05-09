@@ -1,5 +1,6 @@
 import sys
 import os
+from license.license_dialog import LicenseDialog
 
 # =========================
 # EXE RUNTIME PATH
@@ -41,7 +42,14 @@ def main():
     print(msg)
 
     if not ok:
-        QMessageBox.critical(None, "License", msg)
+
+        dlg = LicenseDialog(
+            license_manager.device_id,
+            msg
+        )
+
+        dlg.exec()
+
         sys.exit()
     # ========================= 
     # GLOBAL LICENSE MANAGER 
