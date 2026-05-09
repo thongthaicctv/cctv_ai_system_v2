@@ -1078,14 +1078,19 @@ class _VideoTab(QWidget):
 # ─────────────────────────────────────────────
 class HRPage(QWidget):
     """
-    Gắn vào main_window.py tại stack index 3 (thay QLabel "Tra cứu đơn hàng").
-    Sidebar trái chọn tab: Nhân sự | Video.
+    Trang quản lý nhân sự.
+    Chỉ còn Nhân sự, không chứa tab Video nữa.
     """
 
     def __init__(self):
         super().__init__()
         self.setStyleSheet(_BASE)
-        self._build()
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+
+        layout.addWidget(_HRTab())
 
     def _build(self):
         outer = QHBoxLayout(self)
@@ -1139,3 +1144,10 @@ class HRPage(QWidget):
         self._stack.setCurrentIndex(idx)
         for i, b in enumerate(self._tab_btns):
             b.setChecked(i == idx)
+
+
+class VideoPage(_VideoTab):
+    """
+    Trang tra cứu video riêng để gắn vào sidebar chính.
+    """
+    pass

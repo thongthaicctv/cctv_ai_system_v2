@@ -6,7 +6,9 @@ import sys
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 
-from PySide6.QtCore import QThread, QTimer, Signal
+from PySide6.QtGui import QPixmap
+
+from PySide6.QtCore import QThread, QTimer, Signal, Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget,
@@ -35,7 +37,7 @@ from system_logger import log
 
 from ui.pages.log_page import LogPage
 
-from hr.hr_page import HRPage
+from hr.hr_page import HRPage, VideoPage
 
 
 class NetworkCheckWorker(QThread):
@@ -149,8 +151,9 @@ class MainWindow(QMainWindow):
         self.btn_camera = QPushButton("🎥 Trạng thái Camera ghi hình")
         self.btn_dashboard = QPushButton("🏠 Tổng quan")
         self.btn_config = QPushButton("⚙️ Cấu hình Camera")
-        self.btn_search = QPushButton("🔍 Quản lý nhân sự và tra cứu")
-        self.btn_video = QPushButton("💾Cài đặt ghi và lưu video")
+        self.btn_search = QPushButton("🔍 Quản lý nhân sự")
+        self.btn_storage = QPushButton("💾 Cài đặt ghi và lưu video")
+        self.btn_video = QPushButton("🎬 Tra cứu video")
         self.btn_log = QPushButton("📜 Nhật ký")
 
         self.buttons = [
@@ -158,6 +161,7 @@ class MainWindow(QMainWindow):
             self.btn_dashboard,
             self.btn_config,
             self.btn_search,
+            self.btn_storage,
             self.btn_video,
             self.btn_log
         ]
@@ -173,7 +177,80 @@ class MainWindow(QMainWindow):
 
         side.addSpacing(8)
         side.addWidget(self.chk_alert)
+
         side.addStretch()
+
+        # =========================
+        # CONTACT / LOGO INFO
+        # =========================
+        contact_box = QFrame()
+        contact_box.setStyleSheet("""
+        QFrame{
+            background:#101010;
+            border:1px solid #2a2a2a;
+            border-radius:10px;
+        }
+        QLabel{
+            color:#dddddd;
+            border:none;
+        }
+        """)
+
+        contact_layout = QVBoxLayout(contact_box)
+        contact_layout.setContentsMargins(10, 10, 10, 10)
+        contact_layout.setSpacing(6)
+
+        logo = QLabel()
+        logo.setAlignment(Qt.AlignCenter)
+
+        pix = QPixmap("logo.png")
+
+        logo.setPixmap(
+            pix.scaled(
+                150,
+                150,
+                Qt.KeepAspectRatio,
+                Qt.SmoothTransformation
+            )
+        )
+        
+        logo = QLabel()
+        logo.setAlignment(Qt.AlignCenter)
+
+        pix = QPixmap("logo.png")
+
+        logo.setPixmap(
+            pix.scaled(
+                150,
+                150,
+                Qt.KeepAspectRatio,
+                Qt.SmoothTransformation
+            )
+        )
+
+        company = QLabel("ATG AI SYSTEM PRO")
+        company.setAlignment(Qt.AlignCenter)
+        company.setStyleSheet("""
+        font-size:11px;
+        font-weight:bold;
+        color:#ffffff;
+        background:transparent;
+        """)
+
+        phone = QLabel("☎ 090 414 3113")
+        phone.setAlignment(Qt.AlignCenter)
+        phone.setStyleSheet("font-size:11px;color:#22c55e;background:transparent;")
+
+        zalo = QLabel("Zalo: 090 414 3113")
+        zalo.setAlignment(Qt.AlignCenter)
+        zalo.setStyleSheet("font-size:11px;color:#93c5fd;background:transparent;")
+
+        contact_layout.addWidget(logo)
+        contact_layout.addWidget(company)
+        contact_layout.addWidget(phone)
+        contact_layout.addWidget(zalo)
+
+        side.addWidget(contact_box)
 
         # ==================================================
         # PAGES
@@ -193,14 +270,20 @@ class MainWindow(QMainWindow):
         self.stack.addWidget(self.page_camera)                 # 0
         self.stack.addWidget(QWidget())                       # 1 placeholder
         self.stack.addWidget(self.page_config)                # 2
+
+
         self.page_hr = HRPage()
-        self.stack.addWidget(self.page_hr)                    # 3
+        self.stack.addWidget(self.page_hr)                       # 3
+
         self.page_storage = StoragePage()
         self.page_storage.settings_saved.connect(self.apply_storage_settings)
-        self.stack.addWidget(self.page_storage)                 # 4
+        self.stack.addWidget(self.page_storage)                  # 4
+
+        self.page_video = VideoPage()
+        self.stack.addWidget(self.page_video)                    # 5
 
         self.page_log = LogPage()
-        self.stack.addWidget(self.page_log)                      # 5
+        self.stack.addWidget(self.page_log)                      # 6
 
         main_layout.addWidget(sidebar)
         main_layout.addWidget(self.stack)
@@ -212,8 +295,9 @@ class MainWindow(QMainWindow):
         self.btn_dashboard.clicked.connect(self.open_dashboard)
         self.btn_config.clicked.connect(lambda: self.switch_page(2))
         self.btn_search.clicked.connect(lambda: self.switch_page(3))
-        self.btn_video.clicked.connect(lambda: self.switch_page(4))
-        self.btn_log.clicked.connect(lambda: self.switch_page(5))
+        self.btn_storage.clicked.connect(lambda: self.switch_page(4))
+        self.btn_video.clicked.connect(lambda: self.switch_page(5))
+        self.btn_log.clicked.connect(lambda: self.switch_page(6))
 
         self.btn_camera.setChecked(True)
         self.stack.setCurrentIndex(0)
