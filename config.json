@@ -1,5 +1,5 @@
 {
-    "alert_enabled": true,
+    "alert_enabled": false,
     "storage_path": "D:/Video 2",
     "record_auto_stop_seconds": 900,
     "record_mapping": {

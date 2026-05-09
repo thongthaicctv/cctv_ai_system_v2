@@ -66,7 +66,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("CCTV_AI_SYSTEM PRO")
+        self.setWindowTitle("Pro Video AI System - ATG Solution Version 1.0")
         self.resize(1366, 768)
         self.setMinimumSize(1280, 720)
 
@@ -142,7 +142,7 @@ class MainWindow(QMainWindow):
         side.setContentsMargins(12, 12, 12, 12)
         side.setSpacing(8)
 
-        logo = QLabel("CCTV AI SYSTEM")
+        logo = QLabel("Pro Video AI System  - ATG Solution Version 1.0 ")
         logo.setFont(QFont("Segoe UI", 15, QFont.Bold))
 
         side.addWidget(logo)
@@ -184,6 +184,7 @@ class MainWindow(QMainWindow):
         # CONTACT / LOGO INFO
         # =========================
         contact_box = QFrame()
+        contact_box.setFixedHeight(240)
         contact_box.setStyleSheet("""
         QFrame{
             background:#101010;
@@ -198,17 +199,17 @@ class MainWindow(QMainWindow):
 
         contact_layout = QVBoxLayout(contact_box)
         contact_layout.setContentsMargins(10, 10, 10, 10)
-        contact_layout.setSpacing(6)
+        contact_layout.setSpacing(3)
 
         logo = QLabel()
         logo.setAlignment(Qt.AlignCenter)
 
-        pix = QPixmap("logo.png")
+        pix = QPixmap("logo_app.png")
 
         logo.setPixmap(
             pix.scaled(
-                150,
-                150,
+                200,
+                200,
                 Qt.KeepAspectRatio,
                 Qt.SmoothTransformation
             )
@@ -217,21 +218,21 @@ class MainWindow(QMainWindow):
         logo = QLabel()
         logo.setAlignment(Qt.AlignCenter)
 
-        pix = QPixmap("logo.png")
+        pix = QPixmap("logo_app.png")
 
         logo.setPixmap(
             pix.scaled(
-                150,
-                150,
+                200,
+                200,
                 Qt.KeepAspectRatio,
                 Qt.SmoothTransformation
             )
         )
 
-        company = QLabel("ATG AI SYSTEM PRO")
+        company = QLabel("www.annguyen.pro ")
         company.setAlignment(Qt.AlignCenter)
         company.setStyleSheet("""
-        font-size:11px;
+        font-size:12px;
         font-weight:bold;
         color:#ffffff;
         background:transparent;
@@ -239,11 +240,11 @@ class MainWindow(QMainWindow):
 
         phone = QLabel("☎ 090 414 3113")
         phone.setAlignment(Qt.AlignCenter)
-        phone.setStyleSheet("font-size:11px;color:#22c55e;background:transparent;")
+        phone.setStyleSheet("font-size:18px;color:#22c55e;background:transparent;")
 
         zalo = QLabel("Zalo: 090 414 3113")
         zalo.setAlignment(Qt.AlignCenter)
-        zalo.setStyleSheet("font-size:11px;color:#93c5fd;background:transparent;")
+        zalo.setStyleSheet("font-size:18px;color:#93c5fd;background:transparent;")
 
         contact_layout.addWidget(logo)
         contact_layout.addWidget(company)
