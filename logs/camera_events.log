@@ -1295,3 +1295,33 @@
 2026-05-10 10:51:06 | DEBUG-1 ONLINE
 2026-05-10 10:51:21 | DEBUG-1 OFFLINE
 2026-05-10 10:51:30 | DEBUG-1 ONLINE
+2026-05-10 10:58:46 | ======================================================================
+2026-05-10 10:58:46 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 10:58:46 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 10:58:46 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 10:58:46 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 10:58:46 | ----------------------------------------------------------------------
+2026-05-10 10:58:46 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 10:58:46 | ======================================================================
+2026-05-10 10:58:57 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 10:58:58 | DEBUG-1 ONLINE
+2026-05-10 11:47:31 | ======================================================================
+2026-05-10 11:47:31 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 11:47:31 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 11:47:31 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 11:47:31 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 11:47:31 | ----------------------------------------------------------------------
+2026-05-10 11:47:31 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 11:47:31 | ======================================================================
+2026-05-10 11:47:38 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 11:47:39 | DEBUG-1 ONLINE
+2026-05-10 11:53:56 | ======================================================================
+2026-05-10 11:53:56 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 11:53:56 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 11:53:56 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 11:53:56 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 11:53:56 | ----------------------------------------------------------------------
+2026-05-10 11:53:56 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 11:53:56 | ======================================================================
+2026-05-10 11:54:02 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 11:54:03 | DEBUG-1 ONLINE

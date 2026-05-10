@@ -893,6 +893,14 @@ class _VideoTab(QWidget):
         flt.addWidget(self.f_cam)
         flt.addWidget(self.f_date)
         flt.addWidget(self.f_order)
+
+        self.btn_multiplay = QPushButton("🎞 MultiPlay")
+        self.btn_multiplay.setFixedHeight(34)
+        self.btn_multiplay.setStyleSheet(_BTN_PRIMARY)
+        self.btn_multiplay.clicked.connect(self._open_multiplay)
+
+        flt.addWidget(self.btn_multiplay)
+
         lo.addLayout(flt)
 
 
@@ -1269,7 +1277,24 @@ class HRPage(QWidget):
 
 
 class VideoPage(_VideoTab):
-    """
-    Trang tra cứu video riêng để gắn vào sidebar chính.
-    """
-    pass
+    
+    
+    def _open_multiplay(self):
+        exe_path = os.path.abspath("multiplay.exe")
+
+        if not os.path.exists(exe_path):
+            QMessageBox.warning(
+                self,
+                "Không tìm thấy",
+                f"Không tìm thấy multiplay.exe:\n{exe_path}"
+            )
+            return
+
+        try:
+            subprocess.Popen([exe_path], shell=False)
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Lỗi mở MultiPlay",
+                str(e)
+            )
