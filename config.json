@@ -18,6 +18,8 @@
             "4"
         ]
     },
+    "cleanup_enabled": true,
+    "cleanup_keep_days": 240,
     "cameras": [
         {
             "id": "1",
@@ -56,6 +58,5 @@
             "enabled": true
         }
     ],
-    "cleanup_enabled": true,
     "keep_index_days": 3
 }

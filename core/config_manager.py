@@ -10,12 +10,18 @@ _CONFIG_MTIME = None
 def _default_config():
     return {
         "alert_enabled": True,
+
         "storage_path": "videos",
-        "record_auto_stop_seconds": 300,
+
+        "record_auto_stop_seconds": 600,
+
         "record_mapping": {},
+
+        "cleanup_enabled": False,
+        "keep_index_days": 240,
+
         "cameras": [],
     }
-
 
 def _normalize_config(data):
     merged = _default_config()

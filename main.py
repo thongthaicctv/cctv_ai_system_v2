@@ -4,6 +4,10 @@ from license.license_dialog import LicenseDialog
 
 from hr.report_db import init_report_db
 
+
+from core.config_manager import load_config
+from services.cleanup_service import cleanup_index_and_video_sync
+
 # =========================
 # EXE RUNTIME PATH
 # =========================
@@ -34,6 +38,24 @@ def main():
     app.gpu_runtime_info = accel_info
 
     init_report_db()
+
+
+    # =========================
+    # CLEANUP OLD VIDEOS
+    # Chỉ chạy 1 lần khi mở app
+    # =========================
+
+    cfg = load_config(force=True)
+
+    print("STORAGE =", cfg.get("storage_path"))
+    print("KEEP INDEX DAYS =", cfg.get("keep_index_days"))
+    print("CLEANUP ENABLED =", cfg.get("cleanup_enabled"))
+
+    cleanup_index_and_video_sync(
+        storage_path=cfg.get("storage_path", "recordings"),
+        keep_days=int(cfg.get("keep_index_days", 240)),
+        enabled=bool(cfg.get("cleanup_enabled", False))
+    )
 
     # =========================
     # LICENSE CHECK

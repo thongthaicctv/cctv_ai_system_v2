@@ -15,7 +15,7 @@ from hr.report_db import insert_video_report
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _DEFAULT_STORAGE = os.path.join(_ROOT, "recordings")
-
+INDEX_DIR = "index"
 
 # ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -125,104 +125,121 @@ def _get_duration_sec(fpath: str, size_mb: float) -> int:
 # ─── core scan ──────────────────────────────────────────────────────────────
 
 def build_index(storage_path: str = None) -> dict:
-    """
-    Quét toàn bộ video trong storage_path.
-    Trả về dict index và ghi index.json.
-    Keys khớp chính xác với hr_page._VideoTab._fill():
-        camera_id, camera_name, date, start_time, duration_sec,
-        order_code, employee_id, employee_name, department, position,
-        file_size_mb, file_size_bytes, file_path, filename,
-        trigger_type, status, created_at
-    """
     base = storage_path or _storage_path()
     os.makedirs(base, exist_ok=True)
 
+    index_dir = os.path.join(base, INDEX_DIR)
+    os.makedirs(index_dir, exist_ok=True)
+
     cam_map = _cameras_map()
     emp_map = _employees_map()
-    videos  = []
+
+    videos_by_date = {}
+    all_videos = []
 
     for ext in ("*.mp4", "*.avi", "*.mkv", "*.mov"):
         for fpath in sorted(glob.glob(os.path.join(base, "**", ext), recursive=True)):
-            fname      = os.path.basename(fpath)
-            stat       = os.stat(fpath)
-            size_bytes = stat.st_size
-            size_mb    = round(size_bytes / (1024 * 1024), 2)
-            mtime      = datetime.fromtimestamp(stat.st_mtime)
 
-            p        = _parse_filename(fname, cam_map, emp_map)
+            # bỏ qua thư mục index
+            if os.path.normpath(index_dir) in os.path.normpath(fpath):
+                continue
+
+            fname = os.path.basename(fpath)
+            stat = os.stat(fpath)
+
+            size_bytes = stat.st_size
+            size_mb = round(size_bytes / (1024 * 1024), 2)
+            mtime = datetime.fromtimestamp(stat.st_mtime)
+
+            p = _parse_filename(fname, cam_map, emp_map)
             duration = _get_duration_sec(fpath, size_mb)
 
-            # Nếu parse tên file thất bại, fallback dùng mtime
             if not p["date"]:
-                p["date"]   = mtime.strftime("%Y-%m-%d")
+                p["date"] = mtime.strftime("%Y-%m-%d")
                 p["dt_iso"] = mtime.strftime("%Y-%m-%dT%H:%M:%S")
 
             start_iso = p["dt_iso"]
+
             try:
-                end_iso = (datetime.fromisoformat(start_iso)
-                           + timedelta(seconds=duration)).isoformat()
+                end_iso = (
+                    datetime.fromisoformat(start_iso)
+                    + timedelta(seconds=duration)
+                ).isoformat()
             except Exception:
                 end_iso = start_iso
 
-            # rel_path dùng để phát/tải — đường dẫn tương đối từ base
             rel_path = os.path.relpath(fpath, base).replace("\\", "/")
 
-            # vid_id unique
-            vid_id = (f"VID_C{p['camera_id']}_"
-                      f"{p['date'].replace('-', '')}_{start_iso[11:].replace(':', '')}")
+            vid_id = (
+                f"VID_C{p['camera_id']}_"
+                f"{p['date'].replace('-', '')}_"
+                f"{start_iso[11:].replace(':', '')}"
+            )
 
             entry = {
-                # ── Định danh ──────────────────────────────────
-                "id":              vid_id,
-                "filename":        fname,
-                "file_path":       rel_path,
-                "file_size_mb":    size_mb,
+                "id": vid_id,
+                "filename": fname,
+                "file_path": rel_path,
+                "file_size_mb": size_mb,
                 "file_size_bytes": size_bytes,
 
-                # ── Camera ─────────────────────────────────────
-                "camera_id":       p["camera_id"],
-                "camera_name":     p["camera_name"],
+                "camera_id": p["camera_id"],
+                "camera_name": p["camera_name"],
 
-                # ── Thời gian ──────────────────────────────────
-                "date":            p["date"],
-                "start_time":      start_iso,
-                "end_time":        end_iso,
-                "duration_sec":    duration,
+                "date": p["date"],
+                "start_time": start_iso,
+                "end_time": end_iso,
+                "duration_sec": duration,
 
-                # ── Đơn hàng / QR ──────────────────────────────
-                "order_code":      p["order_code"],
-                "qr_code":         p["order_code"],
+                "order_code": p["order_code"],
+                "qr_code": p["order_code"],
 
-                # ── Nhân viên ──────────────────────────────────
-                "employee_id":     p["emp_id"],
-                "employee_name":   p["employee_name"],
-                "department":      p["department"],
-                "position":        p["position"],
+                "employee_id": p["emp_id"],
+                "employee_name": p["employee_name"],
+                "department": p["department"],
+                "position": p["position"],
 
-                # ── Meta ───────────────────────────────────────
-                "trigger_type":    "qr",
-                "status":          "completed",
-                "created_at":      mtime.isoformat(),
+                "trigger_type": "qr",
+                "status": "completed",
+                "created_at": mtime.isoformat(),
             }
 
-            # add vào index
-            videos.append(entry)
+            date_key = entry["date"]
+            videos_by_date.setdefault(date_key, []).append(entry)
+            all_videos.append(entry)
 
-            # add vào report.db
             insert_video_report(entry)
 
-    index = {
-        "schema_version": "2.1",
-        "generated_at":   datetime.now().isoformat(),
-        "storage_path":   base,
-        "total":          len(videos),
-        "videos":         videos,
+    # xoá index ngày cũ để build lại sạch
+    for old_file in glob.glob(os.path.join(index_dir, "*.json")):
+        try:
+            os.remove(old_file)
+        except Exception:
+            pass
+
+    # ghi index theo từng ngày
+    for date_key, items in videos_by_date.items():
+        day_file = os.path.join(index_dir, f"{date_key}.json")
+
+        payload = {
+            "schema_version": "2.2",
+            "date": date_key,
+            "generated_at": datetime.now().isoformat(),
+            "storage_path": base,
+            "total": len(items),
+            "videos": items,
+        }
+
+        with open(day_file, "w", encoding="utf-8") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+
+    return {
+        "schema_version": "2.2",
+        "generated_at": datetime.now().isoformat(),
+        "storage_path": base,
+        "total": len(all_videos),
+        "videos": all_videos,
     }
-
-    with open(os.path.join(base, "index.json"), "w", encoding="utf-8") as f:
-        json.dump(index, f, ensure_ascii=False, indent=2)
-
-    return index
 
 
 # Alias – các chỗ khác gọi tên này
@@ -233,30 +250,73 @@ scan_recordings = lambda d=None: build_index(d).get("videos", [])
 # ─── load ────────────────────────────────────────────────────────────────────
 
 def load_index(storage_path: str = None) -> dict:
-    """Tải index.json hiện có, tự rebuild nếu chưa có."""
-    base     = storage_path or _storage_path()
-    idx_path = os.path.join(base, "index.json")
-    if not os.path.exists(idx_path):
+    base = storage_path or _storage_path()
+    index_dir = os.path.join(base, INDEX_DIR)
+
+    if not os.path.exists(index_dir):
         return build_index(base)
-    try:
-        with open(idx_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return build_index(base)
+
+    videos = []
+
+    for fp in sorted(glob.glob(os.path.join(index_dir, "*.json")), reverse=True):
+        try:
+            with open(fp, "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+            videos.extend(data.get("videos", []))
+
+        except Exception as e:
+            print("[INDEX LOAD ERROR]", fp, e)
+
+    return {
+        "schema_version": "2.2",
+        "generated_at": datetime.now().isoformat(),
+        "storage_path": base,
+        "total": len(videos),
+        "videos": videos,
+    }
 
 
 def append_video_entry(entry: dict, storage_path: str = None):
-    """Thêm nhanh 1 entry sau khi RecordWorker hoàn thành (không quét lại)."""
     base = storage_path or _storage_path()
-    idx  = load_index(base)
-    seen = {v["filename"] for v in idx.get("videos", [])}
-    if entry.get("filename") not in seen:
-        idx.setdefault("videos", []).append(entry)
-        idx["total"]        = len(idx["videos"])
-        idx["generated_at"] = datetime.now().isoformat()
-        with open(os.path.join(base, "index.json"), "w", encoding="utf-8") as f:
-            json.dump(idx, f, ensure_ascii=False, indent=2)
 
+    index_dir = os.path.join(base, INDEX_DIR)
+    os.makedirs(index_dir, exist_ok=True)
+
+    date_key = entry.get("date") or str(entry.get("start_time", ""))[:10]
+
+    if not date_key:
+        date_key = datetime.now().strftime("%Y-%m-%d")
+
+    day_file = os.path.join(index_dir, f"{date_key}.json")
+
+    data = {
+        "schema_version": "2.2",
+        "date": date_key,
+        "generated_at": datetime.now().isoformat(),
+        "storage_path": base,
+        "total": 0,
+        "videos": [],
+    }
+
+    if os.path.exists(day_file):
+        try:
+            with open(day_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception:
+            pass
+
+    seen = {v.get("filename") for v in data.get("videos", [])}
+
+    if entry.get("filename") not in seen:
+        data["videos"].append(entry)
+        insert_video_report(entry)
+
+    data["total"] = len(data["videos"])
+    data["generated_at"] = datetime.now().isoformat()
+
+    with open(day_file, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
 # ─── HTML report ─────────────────────────────────────────────────────────────
 
