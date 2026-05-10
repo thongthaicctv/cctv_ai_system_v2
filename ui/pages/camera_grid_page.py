@@ -28,8 +28,8 @@ class CameraGridPage(QWidget):
         self._camera_signature = ()
         self.preview_windows = {}
 
-        self.title = QLabel("TRANG THAI CAMERA")
-        self.title.setFont(QFont("Segoe UI", 18, QFont.Bold))
+        self.title = QLabel("TRẠNG THÁI CAMERA")
+        self.title.setFont(QFont("Segoe UI", 24, QFont.Bold))
 
         self.grid = QGridLayout()
         self.grid.setSpacing(10)
@@ -40,7 +40,7 @@ class CameraGridPage(QWidget):
 
         self.cmd_input = QLineEdit()
         self.cmd_input.setPlaceholderText(
-            "Lenh CMD: c01... = theo ID camera | s01... = theo thu tu scan | s0... = alias cua vi tri 1"
+            "Lenh CMD: s01emp:xxx=mã nhân viên xxx | s01abc123= dơn hàng abc123| s01stop= kết thúc ca"
         )
         self.cmd_input.setFixedHeight(38)
         self.cmd_input.setStyleSheet(

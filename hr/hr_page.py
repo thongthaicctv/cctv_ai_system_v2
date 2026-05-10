@@ -192,6 +192,7 @@ class _EmployeeDialog(QDialog):
 
         self.f_shift = QComboBox()
         self.f_shift.addItems([
+            "Full (6:00 - 23:00)",
             "Ca sáng (6:00 - 14:00)",
             "Ca chiều (14:00 - 22:00)",
             "Ca đêm (22:00 - 6:00)",
@@ -545,11 +546,33 @@ class _HRTab(QWidget):
             f"font-size:18px;font-weight:700;color:#ffffff;border:none;background:transparent;"
         )
         hdr.addWidget(t)
+        
+
         hdr.addStretch()
+
+        btn_stop = QPushButton("🛑 QR STOP")
+        btn_stop.setStyleSheet("""
+        QPushButton{
+            background:#7f1d1d;
+            color:white;
+            border:none;
+            padding:7px 16px;
+            border-radius:8px;
+            font-weight:700;
+        }
+        QPushButton:hover{
+            background:#dc2626;
+        }
+        """)
+        btn_stop.clicked.connect(self._create_stop_qr)
+
         btn_add = QPushButton("+ Thêm nhân viên")
         btn_add.setStyleSheet(_BTN_PRIMARY)
         btn_add.clicked.connect(self._add)
+
         hdr.addWidget(btn_add)
+        hdr.addWidget(btn_stop)
+
         lo.addLayout(hdr)
 
         # Stats
@@ -727,6 +750,49 @@ class _HRTab(QWidget):
             self._reload()
 
 
+    def _create_stop_qr(self):
+        try:
+            from PySide6.QtGui import QPixmap
+            from PySide6.QtWidgets import QFileDialog
+            import qrcode
+
+            qr = qrcode.QRCode(
+                version=1,
+                box_size=12,
+                border=3
+            )
+
+            qr.add_data("STOP")
+            qr.make(fit=True)
+
+            img = qr.make_image(fill_color="black", back_color="white")
+
+            save_path, _ = QFileDialog.getSaveFileName(
+                self,
+                "Lưu QR STOP",
+                "STOP_QR.png",
+                "PNG Image (*.png)"
+            )
+
+            if not save_path:
+                return
+
+            img.save(save_path)
+
+            QMessageBox.information(
+                self,
+                "Đã tạo",
+                f"Đã lưu QR STOP:\n{save_path}"
+            )
+
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Lỗi tạo QR STOP",
+                str(e)
+            )
+
+    
 # ─────────────────────────────────────────────
 # VIDEO TAB – Tra cứu video đã ghi
 # ─────────────────────────────────────────────

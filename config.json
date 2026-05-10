@@ -4,14 +4,17 @@
     "record_auto_stop_seconds": 30,
     "record_mapping": {
         "1": [
-            "1",
-            "2",
-            "3",
-            "4"
+            "1"
         ],
-        "2": [],
-        "3": [],
-        "4": []
+        "2": [
+            "2"
+        ],
+        "3": [
+            "3"
+        ],
+        "4": [
+            "4"
+        ]
     },
     "cleanup_enabled": true,
     "keep_index_days": 3,
