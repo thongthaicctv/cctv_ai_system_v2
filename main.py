@@ -103,10 +103,10 @@ def main():
     # =========================
 
     window = MainWindow()
-    log(accel_info["message"])
+
     QTimer.singleShot(
         1000,
-        lambda: window.show_alert("GPU", accel_info["message"])
+        lambda: log(f"[GPU] {accel_info['message']}")
     )
     
     app.record_engine = window.record

@@ -40,7 +40,7 @@ class CameraGridPage(QWidget):
 
         self.cmd_input = QLineEdit()
         self.cmd_input.setPlaceholderText(
-            "Lenh CMD: s01emp:xxx=mã nhân viên xxx | s01abc123= dơn hàng abc123| s01stop= kết thúc ca"
+            "Lệnh thủ công: s01emp:xxx=mã nhân viên xxx | s01abc123= dơn hàng abc123| s01stop= kết thúc ca"
         )
         self.cmd_input.setFixedHeight(38)
         self.cmd_input.setStyleSheet(

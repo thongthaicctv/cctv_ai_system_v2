@@ -9,7 +9,7 @@ _CONFIG_MTIME = None
 
 def _default_config():
     return {
-        "alert_enabled": True,
+        
 
         "storage_path": "videos",
 

@@ -6,6 +6,8 @@ import sys
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 
+import webbrowser
+
 from PySide6.QtGui import QIcon, QPixmap
 
 from PySide6.QtCore import QThread, QTimer, Signal, Qt
@@ -13,8 +15,7 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget,
     QHBoxLayout, QVBoxLayout, QPushButton,
-    QLabel, QFrame, QStackedWidget,
-    QCheckBox, QSystemTrayIcon, QStyle
+    QLabel, QFrame, QStackedWidget
 )
 
 from core.config_manager import load_config, save_config
@@ -111,9 +112,7 @@ class MainWindow(QMainWindow):
         root = QWidget()
         self.setCentralWidget(root)
 
-        self.tray = QSystemTrayIcon(self)
-        self.tray.setIcon(app_icon if not app_icon.isNull() else self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon))
-        self.tray.show()
+        
 
         main_layout = QHBoxLayout(root)
         main_layout.setContentsMargins(0, 0, 0, 0)
@@ -123,7 +122,7 @@ class MainWindow(QMainWindow):
         # LOAD CONFIG
         # ==================================================
         data = load_config()
-        self.alert_enabled = data.get("alert_enabled", True)
+
 
         # ==================================================
         # SIDEBAR
@@ -170,12 +169,12 @@ class MainWindow(QMainWindow):
             b.setMinimumHeight(46)
             side.addWidget(b)
 
-        self.chk_alert = QCheckBox("🔔 Bật cảnh báo")
-        self.chk_alert.setChecked(self.alert_enabled)
-        self.chk_alert.stateChanged.connect(self.toggle_alert)
+        self.btn_youtube = QPushButton("▶️ Hướng dẫn sử dụng")
+        self.btn_youtube.setMinimumHeight(46)
+        self.btn_youtube.clicked.connect(self.open_youtube_playlist)
 
         side.addSpacing(8)
-        side.addWidget(self.chk_alert)
+        side.addWidget(self.btn_youtube)
 
         side.addStretch()
 
@@ -374,28 +373,10 @@ class MainWindow(QMainWindow):
     def network_check_finished(self):
         self.network_worker = None
 
-    # ==================================================
-    # ALERT
-    # ==================================================
     def show_alert(self, title, message):
-        if not self.alert_enabled:
-            return
+        log(f"[{title}] {message}")
 
-        self.tray.showMessage(
-            title,
-            message,
-            QSystemTrayIcon.Warning,
-            5000
-        )
 
-    # ==================================================
-    # SAVE ALERT CONFIG
-    # ==================================================
-    def toggle_alert(self):
-        self.alert_enabled = self.chk_alert.isChecked()
-        data = load_config()
-        data["alert_enabled"] = self.alert_enabled
-        save_config(data)
 
     def apply_storage_settings(self, data):
         self.record.update_settings(
@@ -422,6 +403,11 @@ class MainWindow(QMainWindow):
             self.stack.insertWidget(1, self.page_dashboard)
 
         self.stack.setCurrentIndex(1)
+
+    def open_youtube_playlist(self):
+        webbrowser.open(
+            "https://www.youtube.com/playlist?list=PLwJIqstNBJGnfHiQblP5g1YJKcwlMp8HV"
+        )
 
     def closeEvent(self, event):
         try:
