@@ -1,20 +1,17 @@
 {
     "alert_enabled": false,
-    "storage_path": "D:/Video 2",
-    "record_auto_stop_seconds": 900,
+    "storage_path": "G:/ProVideoAiSystem",
+    "record_auto_stop_seconds": 30,
     "record_mapping": {
         "1": [
-            "1"
-        ],
-        "2": [
-            "2"
-        ],
-        "3": [
-            "3"
-        ],
-        "4": [
+            "1",
+            "2",
+            "3",
             "4"
-        ]
+        ],
+        "2": [],
+        "3": [],
+        "4": []
     },
     "cleanup_enabled": true,
     "keep_index_days": 3,

@@ -37,3 +37,7 @@ def order_ok():
 
 def stop_ok():
     play_sound("stop_ok.wav")
+
+
+def record_error():
+    play_sound("eror.wav")

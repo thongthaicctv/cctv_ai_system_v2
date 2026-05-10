@@ -1,10 +1,17 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import os
+
 from PyInstaller.utils.hooks import collect_submodules
 
 
 hiddenimports = []
 hiddenimports += collect_submodules("pyzbar")
+
+binaries = []
+ffmpeg_path = r"C:\ffmpeg\bin\ffmpeg.exe"
+if os.path.exists(ffmpeg_path):
+    binaries.append((ffmpeg_path, "."))
 
 datas = [
     ("assets", "assets"),
@@ -19,7 +26,7 @@ datas = [
 a = Analysis(
     ["main.py"],
     pathex=["."],
-    binaries=[],
+    binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,
     hookspath=[],

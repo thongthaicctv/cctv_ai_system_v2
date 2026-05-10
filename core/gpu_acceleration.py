@@ -1,24 +1,151 @@
 import os
+import shutil
+import subprocess
 
 
 _ACCELERATION_INFO = None
+NVIDIA_SMI_PATHS = (
+    r"C:\Program Files\NVIDIA Corporation\NVSMI\nvidia-smi.exe",
+    r"C:\Windows\System32\nvidia-smi.exe",
+)
+
+
+def find_nvidia_smi():
+    path = shutil.which("nvidia-smi")
+    if path:
+        return path
+
+    for path in NVIDIA_SMI_PATHS:
+        if os.path.exists(path):
+            return path
+
+    return ""
+
+
+def _gpu_names_from_nvidia_smi():
+    nvidia_smi = find_nvidia_smi()
+    if not nvidia_smi:
+        return []
+
+    try:
+        result = subprocess.run(
+            [nvidia_smi, "--query-gpu=name", "--format=csv,noheader"],
+            capture_output=True,
+            text=True,
+            timeout=2,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+    except Exception:
+        return []
+
+    if result.returncode != 0:
+        return []
+
+    return [
+        line.strip()
+        for line in result.stdout.splitlines()
+        if line.strip()
+    ]
+
+
+def query_nvidia_gpu_status():
+    nvidia_smi = find_nvidia_smi()
+    if not nvidia_smi:
+        return None
+
+    try:
+        result = subprocess.run(
+            [
+                nvidia_smi,
+                "--query-gpu=utilization.gpu,encoder.stats.sessionCount,encoder.stats.averageFps",
+                "--format=csv,noheader,nounits",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=2,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+    except Exception:
+        return None
+
+    if result.returncode != 0:
+        return None
+
+    first_line = next((line.strip() for line in result.stdout.splitlines() if line.strip()), "")
+    if not first_line:
+        return None
+
+    parts = [part.strip() for part in first_line.split(",")]
+    try:
+        utilization = float(parts[0])
+    except (IndexError, ValueError):
+        utilization = 0.0
+
+    try:
+        encoder_sessions = int(float(parts[1]))
+    except (IndexError, ValueError):
+        encoder_sessions = 0
+
+    try:
+        encoder_fps = float(parts[2])
+    except (IndexError, ValueError):
+        encoder_fps = 0.0
+
+    return {
+        "utilization": utilization,
+        "encoder_sessions": encoder_sessions,
+        "encoder_fps": encoder_fps,
+    }
+
+
+def _gpu_names_from_wmic():
+    try:
+        result = subprocess.run(
+            ["wmic", "path", "win32_VideoController", "get", "name"],
+            capture_output=True,
+            text=True,
+            timeout=3,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+    except Exception:
+        return []
+
+    if result.returncode != 0:
+        return []
+
+    names = []
+    for line in result.stdout.splitlines():
+        name = line.strip()
+        if not name or name.lower() == "name":
+            continue
+        names.append(name)
+
+    return names
+
+
+def detect_system_gpus():
+    names = []
+    seen = set()
+
+    for name in _gpu_names_from_nvidia_smi() + _gpu_names_from_wmic():
+        key = name.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        names.append(name)
+
+    return names
 
 
 def _preferred_opencl_vendor():
-    try:
-        import GPUtil
-    except Exception:
-        return ""
-
-    try:
-        for gpu in GPUtil.getGPUs():
-            name = str(getattr(gpu, "name", "")).lower()
-            if "nvidia" in name:
-                return "NVIDIA"
-            if "amd" in name or "radeon" in name:
-                return "AMD"
-    except Exception:
-        return ""
+    for gpu_name in detect_system_gpus():
+        name = gpu_name.lower()
+        if "nvidia" in name:
+            return "NVIDIA"
+        if "amd" in name or "radeon" in name:
+            return "AMD"
+        if "intel" in name:
+            return "Intel"
 
     return ""
 
@@ -44,8 +171,10 @@ def configure_opencv_acceleration(force=False):
 
     info = {
         "mode": "cpu",
+        "system_gpus": detect_system_gpus(),
         "cuda_devices": 0,
         "opencl_enabled": False,
+        "opencl_available": False,
         "device_name": "",
         "device_vendor": "",
         "is_discrete_gpu": False,
@@ -64,7 +193,8 @@ def configure_opencv_acceleration(force=False):
         except Exception:
             pass
         info["mode"] = "cuda"
-        info["message"] = f"OpenCV acceleration: CUDA ({cuda_count} device)"
+        gpu_label = ", ".join(info["system_gpus"]) or f"{cuda_count} device"
+        info["message"] = f"OpenCV acceleration: CUDA ({gpu_label})"
         _ACCELERATION_INFO = info
         return dict(info)
 
@@ -75,6 +205,8 @@ def configure_opencv_acceleration(force=False):
     except Exception:
         have_opencl = False
         use_opencl = False
+
+    info["opencl_available"] = have_opencl
 
     if use_opencl:
         try:
@@ -108,6 +240,12 @@ def configure_opencv_acceleration(force=False):
         target_label = "dGPU" if is_discrete else "GPU"
         device_label = " / ".join(x for x in (device_vendor, device_name) if x) or "default device"
         info["message"] = f"OpenCV acceleration: OpenCL {target_label} ({device_label})"
+    elif info["system_gpus"]:
+        gpu_label = ", ".join(info["system_gpus"])
+        if have_opencl:
+            info["message"] = f"OpenCV acceleration: CPU (GPU detected: {gpu_label}, OpenCL not active)"
+        else:
+            info["message"] = f"OpenCV acceleration: CPU (GPU detected: {gpu_label}, OpenCV has no usable CUDA/OpenCL)"
 
     _ACCELERATION_INFO = info
     return dict(info)

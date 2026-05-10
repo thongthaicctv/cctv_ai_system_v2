@@ -852,12 +852,12 @@ class _VideoTab(QWidget):
         self.report_to.setFixedWidth(145)
         self.report_to.setFixedHeight(34)
 
-        self.btn_report_total = QPushButton("📊 Xuất file tổng hợp")
+        self.btn_report_total = QPushButton("📊 Xuất BC tổng hợp")
         self.btn_report_total.setStyleSheet(_BTN_PRIMARY)
         self.btn_report_total.setFixedHeight(34)
         self.btn_report_total.clicked.connect(self._export_report_total)
 
-        self.btn_report_employee = QPushButton("👤 Xuất file NV viên")
+        self.btn_report_employee = QPushButton("👤 Xuất BC NV")
         self.btn_report_employee.setStyleSheet(_BTN_PRIMARY)
         self.btn_report_employee.setFixedHeight(34)
         self.btn_report_employee.clicked.connect(self._export_report_employee)

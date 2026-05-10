@@ -1,11 +1,15 @@
 import math
 import os
+import shutil
+import subprocess
 import time
 from datetime import datetime
 
 import cv2
 
 from system_logger import log
+from core.resource_paths import resource_path
+from services.audio_service import record_error
 from utils.url_helper import camera_rtsp_url, open_rtsp_capture
 
 
@@ -13,6 +17,13 @@ DEFAULT_RECORD_AUTO_STOP_SECONDS = 300
 WAIT_RECORD_UPDATE_TIMEOUT_SECONDS = 1.0
 RETRY_DELAY_SECONDS = 1.0
 FRAME_WRITE_DELAY_SECONDS = 0.0
+RECORD_ERROR_SOUND_INTERVAL_SECONDS = 10.0
+FFMPEG_STARTUP_CHECK_SECONDS = 1.0
+FFMPEG_POLL_DELAY_SECONDS = 0.2
+FFMPEG_PATHS = (
+    r"C:\ffmpeg\bin\ffmpeg.exe",
+    "ffmpeg",
+)
 
 
 class RecordWorker:
@@ -25,10 +36,13 @@ class RecordWorker:
 
         self.capture = None
         self.writer = None
+        self.ffmpeg_process = None
+        self.ffmpeg_mode = ""
         self.current_file = ""
         self.current_order = ""
         self.current_employee = ""
         self.record_started_mono = 0.0
+        self.last_error_sound_mono = 0.0
 
     def run(self):
         cam_id = self.cam["id"]
@@ -47,7 +61,7 @@ class RecordWorker:
                 if not snapshot.get("recording") or not snapshot.get("order_code"):
                     continue
 
-            if self.writer is None or self.capture is None:
+            if not self._has_active_session():
                 if not self._open_session(snapshot):
                     time.sleep(RETRY_DELAY_SECONDS)
                     continue
@@ -65,8 +79,18 @@ class RecordWorker:
                 self.state.stop_record(cam_id, clear_employee=False)
                 continue
 
+            if self.ffmpeg_process is not None:
+                if self.ffmpeg_process.poll() is not None:
+                    self._set_record_error("FFmpeg recording stopped unexpectedly")
+                    self._close_session("FAIL")
+                    self.state.stop_record(cam_id, clear_employee=False)
+                    time.sleep(RETRY_DELAY_SECONDS)
+                else:
+                    time.sleep(FFMPEG_POLL_DELAY_SECONDS)
+                continue
+
             if not self._write_next_frame():
-                self.state.set_error(cam_id, "Main stream lost during recording")
+                self._set_record_error("Main stream lost during recording")
                 self._close_session("FAIL")
                 self.state.stop_record(cam_id, clear_employee=False)
                 time.sleep(RETRY_DELAY_SECONDS)
@@ -78,10 +102,16 @@ class RecordWorker:
         self._close_session("STOP")
 
     def _open_session(self, snapshot):
+        if self._open_ffmpeg_session(snapshot):
+            return True
+
+        return self._open_cv2_session(snapshot)
+
+    def _open_cv2_session(self, snapshot):
         cam_id = self.cam["id"]
         rtsp = camera_rtsp_url(self.cam, prefer="main")
         if not rtsp:
-            self.state.set_error(cam_id, "Missing main RTSP URL for recording")
+            self._set_record_error("Missing main RTSP URL for recording")
             return False
 
         capture = open_rtsp_capture(
@@ -90,19 +120,19 @@ class RecordWorker:
             read_timeout_msec=self.cam.get("record_read_timeout_msec", 5000),
         )
         if not capture.isOpened():
-            self.state.set_error(cam_id, "Cannot open main RTSP stream for recording")
+            self._set_record_error("Cannot open main RTSP stream for recording")
             return False
 
         ok, frame = capture.read()
         if not ok or frame is None:
             capture.release()
-            self.state.set_error(cam_id, "Cannot read main stream frame for recording")
+            self._set_record_error("Cannot read main stream frame for recording")
             return False
 
         writer, output_path = self._create_writer(capture, frame, snapshot)
         if writer is None:
             capture.release()
-            self.state.set_error(cam_id, "Cannot create video writer")
+            self._set_record_error("Cannot create video writer")
             return False
 
         writer.write(frame)
@@ -119,7 +149,54 @@ class RecordWorker:
         log(f"{self.cam['name']} START {self.current_order}")
         return True
 
+    def _open_ffmpeg_session(self, snapshot):
+        ffmpeg = self._find_ffmpeg()
+        if not ffmpeg:
+            return False
+
+        rtsp = camera_rtsp_url(self.cam, prefer="main")
+        if not rtsp:
+            self._set_record_error("Missing main RTSP URL for recording")
+            return False
+
+        base_dir = self._build_output_dir()
+        base_name = self._build_output_name(snapshot)
+        output_path = os.path.abspath(os.path.join(base_dir, f"{base_name}.mp4"))
+
+        attempts = []
+        if self._ffmpeg_has_encoder(ffmpeg, "h264_nvenc"):
+            attempts.append(("ffmpeg-nvenc", self._ffmpeg_nvenc_command(ffmpeg, rtsp, output_path)))
+        attempts.append(("ffmpeg-copy", self._ffmpeg_copy_command(ffmpeg, rtsp, output_path)))
+
+        for mode, command in attempts:
+            process = self._start_ffmpeg(command)
+            if process is None:
+                continue
+
+            time.sleep(FFMPEG_STARTUP_CHECK_SECONDS)
+            if process.poll() is None:
+                self.ffmpeg_process = process
+                self.ffmpeg_mode = mode
+                self.current_file = output_path
+                self.current_order = snapshot.get("order_code", "")
+                self.current_employee = snapshot.get("employee_id", "")
+                self.record_started_mono = time.monotonic()
+
+                self.state.set_video(self.cam["id"], output_path)
+                self.state.clear_error(self.cam["id"])
+                log(f"{self.cam['name']} START {self.current_order} ({mode})")
+                return True
+
+            self._terminate_ffmpeg_process(process)
+
+        self._set_record_error("Cannot start FFmpeg recording")
+        return False
+
     def _switch_order(self, snapshot):
+        if self.ffmpeg_process is not None:
+            self._close_session("SWITCH")
+            return self._open_session(snapshot)
+
         if self.capture is None or self.writer is None:
             return False
 
@@ -203,13 +280,155 @@ class RecordWorker:
 
         return (time.monotonic() - self.record_started_mono) >= seconds
 
+    def _has_active_session(self):
+        if self.ffmpeg_process is not None:
+            return self.ffmpeg_process.poll() is None
+        return self.writer is not None and self.capture is not None
+
+    def _find_ffmpeg(self):
+        configured = str(self.cam.get("ffmpeg_path", "")).strip()
+        candidates = [configured] if configured else []
+        candidates.append(resource_path("ffmpeg.exe"))
+        candidates.extend(FFMPEG_PATHS)
+
+        for candidate in candidates:
+            if not candidate:
+                continue
+            resolved = shutil.which(candidate) if candidate.lower() == "ffmpeg" else candidate
+            if resolved and os.path.exists(resolved):
+                return resolved
+
+        return ""
+
+    def _ffmpeg_base_input_args(self, rtsp):
+        timeout_us = int(self.cam.get("record_open_timeout_msec", 5000)) * 1000
+        return [
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-rtsp_transport",
+            "tcp",
+            "-timeout",
+            str(timeout_us),
+            "-rw_timeout",
+            str(timeout_us),
+            "-i",
+            rtsp,
+        ]
+
+    def _ffmpeg_nvenc_command(self, ffmpeg, rtsp, output_path):
+        bitrate = str(self.cam.get("record_nvenc_bitrate", "4M"))
+        maxrate = str(self.cam.get("record_nvenc_maxrate", "8M"))
+        return [
+            ffmpeg,
+            "-hwaccel",
+            "cuda",
+            *self._ffmpeg_base_input_args(rtsp),
+            "-an",
+            "-c:v",
+            "h264_nvenc",
+            "-preset",
+            str(self.cam.get("record_nvenc_preset", "p4")),
+            "-rc",
+            "vbr",
+            "-cq",
+            str(self.cam.get("record_nvenc_cq", 23)),
+            "-b:v",
+            bitrate,
+            "-maxrate",
+            maxrate,
+            "-bufsize",
+            maxrate,
+            "-movflags",
+            "+faststart",
+            "-y",
+            output_path,
+        ]
+
+    def _ffmpeg_copy_command(self, ffmpeg, rtsp, output_path):
+        return [
+            ffmpeg,
+            *self._ffmpeg_base_input_args(rtsp),
+            "-an",
+            "-c:v",
+            "copy",
+            "-movflags",
+            "+faststart",
+            "-y",
+            output_path,
+        ]
+
+    def _ffmpeg_has_encoder(self, ffmpeg, encoder):
+        try:
+            result = subprocess.run(
+                [ffmpeg, "-hide_banner", "-encoders"],
+                capture_output=True,
+                text=True,
+                timeout=5,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            )
+        except Exception:
+            return False
+
+        return result.returncode == 0 and encoder in result.stdout
+
+    def _start_ffmpeg(self, command):
+        try:
+            return subprocess.Popen(
+                command,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            )
+        except Exception:
+            return None
+
+    def _terminate_ffmpeg_process(self, process):
+        if process is None:
+            return
+
+        if process.poll() is not None:
+            return
+
+        try:
+            if process.stdin:
+                process.stdin.write(b"q\n")
+                process.stdin.flush()
+            process.wait(timeout=8)
+        except Exception:
+            try:
+                process.terminate()
+                process.wait(timeout=3)
+            except Exception:
+                try:
+                    process.kill()
+                except Exception:
+                    pass
+
+    def _set_record_error(self, message):
+        self.state.set_error(self.cam["id"], message)
+
+        now = time.monotonic()
+        if now - self.last_error_sound_mono < RECORD_ERROR_SOUND_INTERVAL_SECONDS:
+            return
+
+        self.last_error_sound_mono = now
+        record_error()
+
     def _close_session(self, reason=None):
         if self.current_order:
             status = {
                 "AUTO": f"REC AUTO STOP {self.current_order}",
                 "FAIL": f"REC FAIL {self.current_order}",
             }.get(reason, f"REC STOP {self.current_order}")
-            log(f"{self.cam['name']} {status}")
+            mode = f" ({self.ffmpeg_mode})" if self.ffmpeg_mode else ""
+            log(f"{self.cam['name']} {status}{mode}")
+
+        if self.ffmpeg_process is not None:
+            self._terminate_ffmpeg_process(self.ffmpeg_process)
+            self.ffmpeg_process = None
+            self.ffmpeg_mode = ""
 
         if self.writer is not None:
             self.writer.release()

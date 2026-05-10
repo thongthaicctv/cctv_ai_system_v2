@@ -21,7 +21,8 @@ if getattr(sys, "frozen", False):
 # =========================
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;tcp"
 
-from PySide6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QIcon
 
 from core.gpu_acceleration import configure_opencv_acceleration, prepare_gpu_runtime
@@ -103,6 +104,10 @@ def main():
 
     window = MainWindow()
     log(accel_info["message"])
+    QTimer.singleShot(
+        1000,
+        lambda: window.show_alert("GPU", accel_info["message"])
+    )
     
     app.record_engine = window.record
 

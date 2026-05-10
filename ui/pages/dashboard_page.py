@@ -5,12 +5,7 @@ import shutil
 import os
 
 from core.config_manager import load_config
-
-try:
-    import GPUtil
-except:
-    GPUtil = None
-
+from core.gpu_acceleration import query_nvidia_gpu_status
 
 
 
@@ -110,17 +105,16 @@ class DashboardPage(QWidget):
             total = 0
             free = 0
 
-        gpu = 0
+        gpu = 0.0
         gpu_text = "N/A"
-
-        if GPUtil:
-            try:
-                gpus = GPUtil.getGPUs()
-                if gpus:
-                    gpu = gpus[0].load * 100
-                    gpu_text = f"{gpu:.0f}%"
-            except:
-                pass
+        gpu_status = query_nvidia_gpu_status()
+        if gpu_status:
+            gpu = gpu_status["utilization"]
+            sessions = gpu_status["encoder_sessions"]
+            if sessions > 0:
+                gpu_text = f"{gpu:.0f}% | ENC {sessions}"
+            else:
+                gpu_text = f"{gpu:.0f}%"
 
         self.cards["CPU"].lbl_value.setText(f"{cpu}%")
         self.cards["RAM"].lbl_value.setText(f"{ram}%")
