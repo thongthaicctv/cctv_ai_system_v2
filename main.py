@@ -2,6 +2,8 @@ import sys
 import os
 from license.license_dialog import LicenseDialog
 
+from hr.report_db import init_report_db
+
 # =========================
 # EXE RUNTIME PATH
 # =========================
@@ -30,6 +32,8 @@ def main():
 
     app = QApplication(sys.argv)
     app.gpu_runtime_info = accel_info
+
+    init_report_db()
 
     # =========================
     # LICENSE CHECK

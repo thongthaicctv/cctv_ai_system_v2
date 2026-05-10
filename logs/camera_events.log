@@ -977,3 +977,60 @@
 2026-05-10 06:54:37 | DEBUG-1 ONLINE
 2026-05-10 07:00:55 | OpenCV acceleration: OpenCL dGPU (NVIDIA Corporation / Quadro K4200)
 2026-05-10 07:00:56 | DEBUG-1 ONLINE
+2026-05-10 08:10:09 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:11:14 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:12:11 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:13:12 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:15:30 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:17:37 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:17:53 | Si-1 ONLINE
+2026-05-10 08:17:53 | Si-2 ONLINE
+2026-05-10 08:17:53 | Si-3 ONLINE
+2026-05-10 08:18:52 | CMD s01testt
+2026-05-10 08:18:57 | Si-3 START testt
+2026-05-10 08:18:58 | Si-2 START testt
+2026-05-10 08:19:07 | CMD s01test
+2026-05-10 08:19:07 | Si-2 STOP testt
+2026-05-10 08:19:07 | Si-2 START test
+2026-05-10 08:19:07 | Si-3 STOP testt
+2026-05-10 08:19:07 | Si-3 START test
+2026-05-10 08:19:12 | CMD s01test
+2026-05-10 08:19:20 | CMD t02test
+2026-05-10 08:19:30 | CMD s01test
+2026-05-10 08:19:50 | Si-2 REC STOP test
+2026-05-10 08:19:50 | CMD s01stop
+2026-05-10 08:19:50 | Si-3 REC STOP test
+2026-05-10 08:20:50 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:20:51 | Si-1 ONLINE
+2026-05-10 08:20:51 | Si-2 ONLINE
+2026-05-10 08:20:51 | Si-3 ONLINE
+2026-05-10 08:21:49 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:21:50 | Si-1 ONLINE
+2026-05-10 08:21:50 | Si-2 ONLINE
+2026-05-10 08:21:50 | Si-3 ONLINE
+2026-05-10 08:22:05 | CMD s01tesst
+2026-05-10 08:22:15 | Si-2 START tesst
+2026-05-10 08:22:15 | CMD s01tesst
+2026-05-10 08:22:20 | Si-3 START tesst
+2026-05-10 08:22:22 | CMD s01stop
+2026-05-10 08:22:22 | Si-3 REC STOP tesst
+2026-05-10 08:22:22 | Si-2 REC STOP tesst
+2026-05-10 08:22:59 | Preview Si-1
+2026-05-10 08:23:09 | Preview Si-2
+2026-05-10 08:23:15 | Preview Si-3
+2026-05-10 08:34:19 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:34:20 | Si-1 ONLINE
+2026-05-10 08:34:20 | Si-2 ONLINE
+2026-05-10 08:34:20 | Si-3 ONLINE
+2026-05-10 08:42:26 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:42:27 | Si-1 ONLINE
+2026-05-10 08:42:27 | Si-2 ONLINE
+2026-05-10 08:42:27 | Si-3 ONLINE
+2026-05-10 08:50:01 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:50:02 | Si-1 ONLINE
+2026-05-10 08:50:02 | Si-2 ONLINE
+2026-05-10 08:50:02 | Si-3 ONLINE
+2026-05-10 08:54:12 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 08:54:13 | Si-1 ONLINE
+2026-05-10 08:54:13 | Si-2 ONLINE
+2026-05-10 08:54:13 | Si-3 ONLINE

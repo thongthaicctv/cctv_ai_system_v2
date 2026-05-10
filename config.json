@@ -4,6 +4,7 @@
     "record_auto_stop_seconds": 900,
     "record_mapping": {
         "1": [
+            "2",
             "3",
             "4"
         ],
@@ -56,5 +57,5 @@
         }
     ],
     "cleanup_enabled": true,
-    "keep_index_days": 240
+    "keep_index_days": 3
 }

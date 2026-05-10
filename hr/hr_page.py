@@ -6,6 +6,8 @@ import os
 import subprocess
 import sys
 
+from datetime import datetime
+
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtGui import QColor, QFont
 from PySide6.QtWidgets import (
@@ -830,11 +832,44 @@ class _VideoTab(QWidget):
         self.c_size  = _StatCard("Dung lượng",  "0 MB", _ORANGE)
         self.c_cams  = _StatCard("Camera IDs",      0,  _YELLOW)
         self.c_emps  = _StatCard("Nhân viên",        0,  _GREEN)
+        
+        
         rr = QHBoxLayout()
+        rr.setSpacing(10)
+
         for c in [self.c_total, self.c_size, self.c_cams, self.c_emps]:
             rr.addWidget(c)
+
         rr.addStretch()
+
+        self.report_from = QLineEdit()
+        self.report_from.setPlaceholderText("Từ ngày YYYY-MM-DD")
+        self.report_from.setFixedWidth(145)
+        self.report_from.setFixedHeight(34)
+
+        self.report_to = QLineEdit()
+        self.report_to.setPlaceholderText("Đến ngày YYYY-MM-DD")
+        self.report_to.setFixedWidth(145)
+        self.report_to.setFixedHeight(34)
+
+        self.btn_report_total = QPushButton("📊 Xuất tổng thể")
+        self.btn_report_total.setStyleSheet(_BTN_PRIMARY)
+        self.btn_report_total.setFixedHeight(34)
+        self.btn_report_total.clicked.connect(self._export_report_total)
+
+        self.btn_report_employee = QPushButton("👤 Xuất theo nhân viên")
+        self.btn_report_employee.setStyleSheet(_BTN_PRIMARY)
+        self.btn_report_employee.setFixedHeight(34)
+        self.btn_report_employee.clicked.connect(self._export_report_employee)
+
+        rr.addWidget(self.report_from)
+        rr.addWidget(self.report_to)
+        rr.addWidget(self.btn_report_total)
+        rr.addWidget(self.btn_report_employee)
+
         lo.addLayout(rr)
+
+        
 
         # Filters
         flt = QHBoxLayout()
@@ -859,6 +894,9 @@ class _VideoTab(QWidget):
         flt.addWidget(self.f_date)
         flt.addWidget(self.f_order)
         lo.addLayout(flt)
+
+
+        
 
         # Table
         cols = ["Camera", "Tên camera", "Ngày", "Giờ", "Thời lượng",
@@ -888,6 +926,90 @@ class _VideoTab(QWidget):
             self._config["keep_index_days"]
         )
 
+
+    def _validate_report_dates(self):
+        from_date = self.report_from.text().strip()
+        to_date = self.report_to.text().strip()
+
+        if not from_date or not to_date:
+            QMessageBox.warning(
+                self,
+                "Thiếu ngày",
+                "Vui lòng nhập đủ Từ ngày và Đến ngày.\nĐịnh dạng: YYYY-MM-DD"
+            )
+            return None, None
+
+        try:
+            datetime.strptime(from_date, "%Y-%m-%d")
+            datetime.strptime(to_date, "%Y-%m-%d")
+        except Exception:
+            QMessageBox.warning(
+                self,
+                "Sai định dạng",
+                "Ngày phải có định dạng YYYY-MM-DD\nVí dụ: 2026-05-10"
+            )
+            return None, None
+
+        return from_date, to_date
+
+
+    def _export_report_total(self):
+        from datetime import datetime
+        from hr.report_excel_exporter import export_total_excel
+
+        from_date, to_date = self._validate_report_dates()
+        if not from_date:
+            return
+
+        default_name = f"bao_cao_tong_the_{from_date}_den_{to_date}.xlsx"
+
+        save_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Lưu báo cáo tổng thể",
+            default_name,
+            "Excel File (*.xlsx)"
+        )
+
+        if not save_path:
+            return
+
+        export_total_excel(from_date, to_date, save_path)
+
+        QMessageBox.information(
+            self,
+            "Xuất báo cáo",
+            f"Đã xuất báo cáo tổng thể:\n{save_path}"
+        )
+
+
+    def _export_report_employee(self):
+        from hr.report_excel_exporter import export_employee_excel
+
+        from_date, to_date = self._validate_report_dates()
+        if not from_date:
+            return
+
+        default_name = f"bao_cao_nhan_vien_{from_date}_den_{to_date}.xlsx"
+
+        save_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Lưu báo cáo theo nhân viên",
+            default_name,
+            "Excel File (*.xlsx)"
+        )
+
+        if not save_path:
+            return
+
+        export_employee_excel(from_date, to_date, save_path)
+
+        QMessageBox.information(
+            self,
+            "Xuất báo cáo",
+            f"Đã xuất báo cáo theo nhân viên:\n{save_path}"
+        )
+
+        
     # ── Data ──────────────────────────────────
     def _load(self):
         idx = load_index(self._storage)

@@ -1,0 +1,1 @@
+timestamp,source,usb_port,signal,fps,resolution,bitrate_mbps,frames_total,frames_dropped,audio_level,audio_clipping,uptime_sec,device_index,alert_kind,alert_message

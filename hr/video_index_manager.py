@@ -11,6 +11,8 @@ import os
 import re
 from datetime import datetime, timedelta
 
+from hr.report_db import insert_video_report
+
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _DEFAULT_STORAGE = os.path.join(_ROOT, "recordings")
 
@@ -169,7 +171,7 @@ def build_index(storage_path: str = None) -> dict:
             vid_id = (f"VID_C{p['camera_id']}_"
                       f"{p['date'].replace('-', '')}_{start_iso[11:].replace(':', '')}")
 
-            videos.append({
+            entry = {
                 # ── Định danh ──────────────────────────────────
                 "id":              vid_id,
                 "filename":        fname,
@@ -183,13 +185,13 @@ def build_index(storage_path: str = None) -> dict:
 
                 # ── Thời gian ──────────────────────────────────
                 "date":            p["date"],
-                "start_time":      start_iso,      # hr_page dùng [11:16]
+                "start_time":      start_iso,
                 "end_time":        end_iso,
-                "duration_sec":    duration,        # hr_page dùng key này
+                "duration_sec":    duration,
 
                 # ── Đơn hàng / QR ──────────────────────────────
-                "order_code":      p["order_code"],  # hr_page dùng key này
-                "qr_code":         p["order_code"],  # alias
+                "order_code":      p["order_code"],
+                "qr_code":         p["order_code"],
 
                 # ── Nhân viên ──────────────────────────────────
                 "employee_id":     p["emp_id"],
@@ -201,7 +203,13 @@ def build_index(storage_path: str = None) -> dict:
                 "trigger_type":    "qr",
                 "status":          "completed",
                 "created_at":      mtime.isoformat(),
-            })
+            }
+
+            # add vào index
+            videos.append(entry)
+
+            # add vào report.db
+            insert_video_report(entry)
 
     index = {
         "schema_version": "2.1",

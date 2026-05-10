@@ -1,0 +1,6 @@
+2026-05-10 08:10:42,397 [INFO] Đang quét thiết bị USB Capture...
+2026-05-10 08:10:47,006 [INFO] SignalEngine dừng hoàn toàn
+2026-05-10 08:10:47,160 [INFO] Imported existing <module 'comtypes.gen' from 'C:\\python310\\lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-05-10 08:10:47,161 [INFO] Using writeable comtypes cache directory: 'C:\python310\lib\site-packages\comtypes\gen'
+2026-05-10 08:10:47,526 [INFO] TTS engine sẵn sàng, giọng: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0
+2026-05-10 08:10:47,528 [INFO] AudioAlertManager khởi động  TTS=OK  Winsound=OK
