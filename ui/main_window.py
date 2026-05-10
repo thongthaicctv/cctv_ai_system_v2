@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QIcon, QPixmap
 
 from PySide6.QtCore import QThread, QTimer, Signal, Qt
 from PySide6.QtGui import QFont
@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 from core.config_manager import load_config, save_config
 from core.logger import write_log
 from core.ping_service import ping_host
+from core.resource_paths import resource_path
 
 from ui.camera_config import CameraConfigPage
 from ui.pages.camera_grid_page import CameraGridPage
@@ -69,6 +70,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Pro Video AI System - ATG Solution Version 1.0")
         self.resize(1366, 768)
         self.setMinimumSize(1280, 720)
+        app_icon = QIcon(resource_path("icon.ico"))
+        self.setWindowIcon(app_icon)
 
         self.setStyleSheet("""
             QMainWindow{
@@ -109,11 +112,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(root)
 
         self.tray = QSystemTrayIcon(self)
-        self.tray.setIcon(
-            self.style().standardIcon(
-                QStyle.StandardPixmap.SP_ComputerIcon
-            )
-        )
+        self.tray.setIcon(app_icon if not app_icon.isNull() else self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon))
         self.tray.show()
 
         main_layout = QHBoxLayout(root)
@@ -204,21 +203,7 @@ class MainWindow(QMainWindow):
         logo = QLabel()
         logo.setAlignment(Qt.AlignCenter)
 
-        pix = QPixmap("logo_app.png")
-
-        logo.setPixmap(
-            pix.scaled(
-                200,
-                200,
-                Qt.KeepAspectRatio,
-                Qt.SmoothTransformation
-            )
-        )
-        
-        logo = QLabel()
-        logo.setAlignment(Qt.AlignCenter)
-
-        pix = QPixmap("logo_app.png")
+        pix = QPixmap(resource_path("logo_app.png"))
 
         logo.setPixmap(
             pix.scaled(

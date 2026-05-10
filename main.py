@@ -1,11 +1,13 @@
 import sys
 import os
+import ctypes
 from license.license_dialog import LicenseDialog
 
 from hr.report_db import init_report_db
 
 
 from core.config_manager import load_config
+from core.resource_paths import resource_path
 from services.cleanup_service import cleanup_index_and_video_sync
 
 # =========================
@@ -20,6 +22,7 @@ if getattr(sys, "frozen", False):
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;tcp"
 
 from PySide6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtGui import QIcon
 
 from core.gpu_acceleration import configure_opencv_acceleration, prepare_gpu_runtime
 from license.license_manager import LicenseManager
@@ -29,6 +32,13 @@ from system_logger import log
 def main():
     prepare_gpu_runtime()
 
+    try:
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+            "ATGSolution.ProVideoAISystem.1.0"
+        )
+    except Exception:
+        pass
+
     from ui.main_window import MainWindow
 
     accel_info = configure_opencv_acceleration()
@@ -36,6 +46,9 @@ def main():
 
     app = QApplication(sys.argv)
     app.gpu_runtime_info = accel_info
+    app_icon = QIcon(resource_path("icon.ico"))
+    if not app_icon.isNull():
+        app.setWindowIcon(app_icon)
 
     init_report_db()
 

@@ -1,26 +1,23 @@
-import time
 import re
+import time
+
 from PySide6.QtWidgets import QApplication
 
 from core.config_manager import load_config
+from core.logger import write_license_log
 from services.audio_service import employee_ok, order_ok, stop_ok
-from services.qr_decoder import (
-    decode_qr_texts,
-    decode_qr_texts_fast,
-    parse_qr_command,
-)
+from services.qr_decoder import decode_qr_texts, decode_qr_texts_fast, parse_qr_command
 from utils.url_helper import camera_rtsp_url, open_rtsp_capture
 
-from core.logger import write_license_log
 
-DEFAULT_SCAN_INTERVAL = 0.05
+DEFAULT_SCAN_INTERVAL = 0.03
 DEFAULT_DUPLICATE_SECONDS = 5
 RECONNECT_DELAY_SECONDS = 2
 MAX_RECONNECT_DELAY_SECONDS = 30
 RTSP_OPEN_TIMEOUT_MSEC = 5000
 RTSP_READ_TIMEOUT_MSEC = 5000
-FULL_SCAN_EVERY_FRAMES = 8
-SLOW_SCAN_EVERY_FRAMES = 40
+FULL_SCAN_EVERY_FRAMES = 5
+SLOW_SCAN_EVERY_FRAMES = 25
 
 
 class QRWorker:
@@ -132,7 +129,6 @@ class QRWorker:
 
     def _fast_scan_regions(self, frame):
         yield self._center_roi(frame)
-
         if self.frame_index % self._full_scan_every_frames() == 0:
             yield frame
 
@@ -164,8 +160,6 @@ class QRWorker:
         self.last_seen[text] = now
         return True
 
-
-
     def _parse_manual_cmd(self, text):
         text = str(text or "").strip()
         if len(text) < 3:
@@ -178,7 +172,6 @@ class QRWorker:
         prefix = f"{match.group(1).lower()}{match.group(2).zfill(2)}"
         body = match.group(3).strip()
         return prefix, body
-
 
     def _find_camera_by_sub(self, prefix):
         data = load_config()
@@ -197,155 +190,103 @@ class QRWorker:
 
         cam_no = prefix[1:]
         for cam in cameras:
-
             cam_id = str(cam["id"]).zfill(2)
-
             if cam_id == cam_no:
                 return str(cam["id"])
-
         return None
 
+    def _get_record_engine(self):
+        app = QApplication.instance()
+        if app is None:
+            return None
+        return getattr(app, "record_engine", None)
+
+    def _record_worker_for_target(self, target_id):
+        record_engine = self._get_record_engine()
+        if not record_engine:
+            print("LICENSE RECORD BLOCK: ENGINE NOT FOUND")
+            return None
+
+        worker = record_engine.workers.get(str(target_id))
+        if worker is not None:
+            return worker
+
+        msg = f"LICENSE RECORD BLOCK: {target_id}"
+        print(msg)
+        write_license_log(msg)
+        return None
+
+    def _start_order_targets(self, target_ids, order_code):
+        any_started = False
+
+        for target_id in target_ids:
+            worker = self._record_worker_for_target(target_id)
+            if worker is None:
+                continue
+
+            state = self.state.get(target_id)
+            if state.get("recording") and state.get("order_code") == order_code:
+                continue
+
+            self.state.start_record(target_id, order_code=order_code)
+            any_started = True
+
+        return any_started
+
     def _handle_command(self, scan_cam_id, text):
-        # ==================================================
-        # MANUAL CMD
-        # ==================================================
         cmd = self._parse_manual_cmd(text)
-
         if cmd:
-
             prefix, body = cmd
-
             scan_cam_id = self._find_camera_by_sub(prefix)
-
             if not scan_cam_id:
                 print("CMD CAMERA NOT FOUND", prefix)
                 return
 
             target_ids = self._target_camera_ids(scan_cam_id)
-
-            # STOP
             body_lower = body.lower()
 
             if body_lower.startswith("stop"):
-
                 for target_id in target_ids:
-
-                    self.state.stop_record(
-                        target_id,
-                        clear_employee=False
-                    )
-
+                    self.state.stop_record(target_id, clear_employee=False)
                 stop_ok()
-
                 print("CMD STOP", target_ids)
-
                 return
 
-            # EMP
             if body_lower.startswith("emp:"):
-
                 emp = body.split(":", 1)[1].strip()
-
                 for target_id in target_ids:
-
-                    self.state.assign_employee(
-                        target_id,
-                        employee_id=emp,
-                        employee_name=""
-                    )
-
+                    self.state.assign_employee(target_id, employee_id=emp, employee_name="")
                 employee_ok()
-
                 print("CMD EMP", target_ids, emp)
-
                 return
 
-            # ORDER
             order_code = body.strip()
-
             if not order_code:
                 return
 
-            for target_id in target_ids:
-
-                # =========================
-                # LICENSE CHECK
-                # =========================
-                app = QApplication.instance()
-
-                record_engine = getattr(app, "record_engine", None)
-
-                if not record_engine:
-
-                    print("LICENSE RECORD BLOCK: ENGINE NOT FOUND")
-
-                    continue
-
-                worker = record_engine.workers.get(str(target_id))
-
-                if not worker:
-
-                    msg = f"LICENSE RECORD BLOCK: {target_id}"
-
-                    print(msg)
-
-                    write_license_log(msg)
-
-                    self.state.stop_record(
-                        target_id,
-                        clear_employee=False
-                    )
-
-                    continue
-
-                st = self.state.get(target_id)
-
-                # chống scan trùng
-                if st.get("recording") and st.get("order_code") == order_code:
-                    continue
-
-                self.state.start_record(
-                    target_id,
-                    order_code=order_code
-                )
-
-            order_ok()
-
-            print("CMD RECORD", target_ids, order_code)
-
+            if self._start_order_targets(target_ids, order_code):
+                order_ok()
+                print("CMD RECORD", target_ids, order_code)
             return
 
         command = parse_qr_command(text)
         action = command["action"]
-        
-
         target_ids = self._target_camera_ids(scan_cam_id)
 
-                                                                                                       
-
         if action == "stop":
-
             for target_id in target_ids:
-
-                self.state.stop_record(
-                    target_id,
-                    clear_employee=False
-                )
-
+                self.state.stop_record(target_id, clear_employee=False)
             stop_ok()
             return
 
         if action == "employee":
-
             for target_id in target_ids:
-
                 self.state.assign_employee(
                     target_id,
                     employee_id=command.get("employee_id", ""),
                     employee_name=command.get("employee_name", ""),
                     shift_code=command.get("shift_code", ""),
                 )
-
             employee_ok()
             return
 
@@ -356,47 +297,7 @@ class QRWorker:
         if not order_code:
             return
 
-        any_started = False
-        for target_id in target_ids:
-
-            # =========================
-            # LICENSE CHECK
-            # =========================
-            app = QApplication.instance()
-
-            record_engine = getattr(app, "record_engine", None)
-
-            if not record_engine:
-
-                print("LICENSE RECORD BLOCK: ENGINE NOT FOUND")
-
-                continue
-
-            worker = record_engine.workers.get(str(target_id))
-
-            if not worker:
-
-                msg = f"LICENSE RECORD BLOCK: {target_id}"
-
-                print(msg)
-
-                write_license_log(msg)
-
-                continue
-
-            state = self.state.get(target_id)
-
-            if state.get("recording") and state.get("order_code") == order_code:
-                continue
-
-            self.state.start_record(
-                target_id,
-                order_code=order_code
-            )
-
-            any_started = True
-
-        if any_started:
+        if self._start_order_targets(target_ids, order_code):
             order_ok()
 
     def _target_camera_ids(self, scan_cam_id):
@@ -410,4 +311,4 @@ class QRWorker:
 
     def _clean_seen_cache(self):
         now = time.time()
-        self.last_seen = {k: v for k, v in self.last_seen.items() if now - v < 10}
+        self.last_seen = {key: value for key, value in self.last_seen.items() if now - value < 10}

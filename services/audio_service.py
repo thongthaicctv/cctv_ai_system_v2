@@ -2,9 +2,9 @@ import os
 import threading
 import winsound
 
+from core.resource_paths import resource_path
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-SOUND_DIR = os.path.join(BASE_DIR, "assets", "sounds")
+SOUND_DIR = resource_path("assets", "sounds")
 
 
 def _play(filename):

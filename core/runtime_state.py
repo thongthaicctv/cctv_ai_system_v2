@@ -1,24 +1,33 @@
-# FILE: core/runtime_state.py
-# STEP 2 - CAMERA STATE ENGINE FULL
-
 from datetime import datetime
+import threading
 
 
 class RuntimeState:
-
     def __init__(self):
         self.states = {}
+        self._lock = threading.RLock()
+        self._changed = threading.Condition(self._lock)
 
-    # ==========================================
-    # INIT CAMERA
-    # ==========================================
-    def add_camera(self, cam_id):
+    def _ensure_camera_locked(self, cam_id):
         if cam_id not in self.states:
             self.states[cam_id] = self.default_state()
 
+    def _touch_locked(self, cam_id, record_changed=False):
+        state = self.states[cam_id]
+        state["version"] = int(state.get("version", 0)) + 1
+        if record_changed:
+            state["record_version"] = int(state.get("record_version", 0)) + 1
+        self._changed.notify_all()
+
+    def add_camera(self, cam_id):
+        with self._changed:
+            self._ensure_camera_locked(cam_id)
+
     def remove_camera(self, cam_id):
-        if cam_id in self.states:
-            del self.states[cam_id]
+        with self._changed:
+            if cam_id in self.states:
+                del self.states[cam_id]
+                self._changed.notify_all()
 
     def default_state(self):
         return {
@@ -26,160 +35,143 @@ class RuntimeState:
             "status": "CHECKING",
             "latency": 0,
             "last_check": "-",
-
             "recording": False,
             "employee_id": "",
             "employee_name": "",
             "order_code": "",
             "shift_code": "",
-
             "video_file": "",
             "employee_started_at": "",
             "started_at": "",
             "stopped_at": "",
-
             "scan_text": "",
-            "error": ""
+            "error": "",
+            "version": 0,
+            "record_version": 0,
         }
 
-    # ==========================================
-    # GET
-    # ==========================================
     def get(self, cam_id):
-        self.add_camera(cam_id)
-        return self.states[cam_id]
+        with self._changed:
+            self._ensure_camera_locked(cam_id)
+            return dict(self.states[cam_id])
 
     def all(self):
-        return self.states
+        with self._changed:
+            return {cam_id: dict(state) for cam_id, state in self.states.items()}
 
-    # ==========================================
-    # NETWORK STATUS
-    # ==========================================
-    def update_network(
-        self,
-        cam_id,
-        online=False,
-        latency=0
-    ):
-        self.add_camera(cam_id)
+    def wait_for_record_update(self, cam_id, last_record_version, timeout=1.0):
+        with self._changed:
+            self._ensure_camera_locked(cam_id)
+            if self.states[cam_id]["record_version"] != last_record_version:
+                return dict(self.states[cam_id])
+            self._changed.wait(timeout)
+            self._ensure_camera_locked(cam_id)
+            return dict(self.states[cam_id])
 
-        self.states[cam_id]["online"] = online
-        self.states[cam_id]["latency"] = latency
-        self.states[cam_id]["last_check"] = datetime.now().strftime("%H:%M:%S")
+    def update_network(self, cam_id, online=False, latency=0):
+        with self._changed:
+            self._ensure_camera_locked(cam_id)
+            state = self.states[cam_id]
+            state["online"] = online
+            state["latency"] = latency
+            state["last_check"] = datetime.now().strftime("%H:%M:%S")
+            self._refresh_status_locked(cam_id)
+            self._touch_locked(cam_id)
 
-        self._refresh_status(cam_id)
-
-    def _refresh_status(self, cam_id):
-        st = self.states[cam_id]
-
-        if st["recording"]:
-            st["status"] = "RECORDING"
-        elif st["employee_id"]:
-            st["status"] = "WORKING"
+    def _refresh_status_locked(self, cam_id):
+        state = self.states[cam_id]
+        if state["recording"]:
+            state["status"] = "RECORDING"
+        elif state["employee_id"]:
+            state["status"] = "WORKING"
         else:
-            st["status"] = "ONLINE" if st["online"] else "OFFLINE"
+            state["status"] = "ONLINE" if state["online"] else "OFFLINE"
 
-    # ==========================================
-    # ASSIGN EMPLOYEE
-    # ==========================================
-    def assign_employee(
-        self,
-        cam_id,
-        employee_id="",
-        employee_name="",
-        shift_code=""
-    ):
-        self.add_camera(cam_id)
+    def assign_employee(self, cam_id, employee_id="", employee_name="", shift_code=""):
+        with self._changed:
+            self._ensure_camera_locked(cam_id)
+            state = self.states[cam_id]
+            state["employee_id"] = employee_id
+            state["employee_name"] = employee_name
+            state["shift_code"] = shift_code
+            state["employee_started_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        st = self.states[cam_id]
+            if not state["recording"]:
+                state["order_code"] = ""
+                state["video_file"] = ""
+                state["started_at"] = ""
+                state["stopped_at"] = ""
 
-        st["employee_id"] = employee_id
-        st["employee_name"] = employee_name
-        st["shift_code"] = shift_code
-        st["employee_started_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self._refresh_status_locked(cam_id)
+            self._touch_locked(cam_id)
 
-        if not st["recording"]:
-            st["order_code"] = ""
-            st["video_file"] = ""
-            st["started_at"] = ""
-            st["stopped_at"] = ""
-
-        self._refresh_status(cam_id)
-
-    # ==========================================
-    # START RECORD
-    # ==========================================
     def start_record(
         self,
         cam_id,
         employee_id="",
         employee_name="",
         order_code="",
-        shift_code=""
+        shift_code="",
     ):
-        self.add_camera(cam_id)
+        with self._changed:
+            self._ensure_camera_locked(cam_id)
+            state = self.states[cam_id]
+            state["recording"] = True
+            state["status"] = "RECORDING"
 
-        st = self.states[cam_id]
+            if employee_id:
+                state["employee_id"] = employee_id
+            if employee_name:
+                state["employee_name"] = employee_name
+            if shift_code:
+                state["shift_code"] = shift_code
 
-        st["recording"] = True
-        st["status"] = "RECORDING"
+            state["order_code"] = order_code
+            state["video_file"] = ""
+            state["started_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            state["stopped_at"] = ""
+            self._touch_locked(cam_id, record_changed=True)
 
-        if employee_id:
-            st["employee_id"] = employee_id
-        if employee_name:
-            st["employee_name"] = employee_name
-        if shift_code:
-            st["shift_code"] = shift_code
-
-        st["order_code"] = order_code
-        st["video_file"] = ""
-
-        st["started_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        st["stopped_at"] = ""
-
-    # ==========================================
-    # STOP RECORD
-    # ==========================================
     def stop_record(self, cam_id, clear_employee=False):
-        self.add_camera(cam_id)
+        with self._changed:
+            self._ensure_camera_locked(cam_id)
+            state = self.states[cam_id]
+            state["recording"] = False
+            state["stopped_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            state["order_code"] = ""
+            state["video_file"] = ""
 
-        st = self.states[cam_id]
+            if clear_employee:
+                state["employee_id"] = ""
+                state["employee_name"] = ""
+                state["shift_code"] = ""
+                state["employee_started_at"] = ""
 
-        st["recording"] = False
-        st["stopped_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self._refresh_status_locked(cam_id)
+            self._touch_locked(cam_id, record_changed=True)
 
-        st["order_code"] = ""
-        st["video_file"] = ""
-
-        if clear_employee:
-            st["employee_id"] = ""
-            st["employee_name"] = ""
-            st["shift_code"] = ""
-            st["employee_started_at"] = ""
-
-        self._refresh_status(cam_id)
-
-    # ==========================================
-    # SCAN QR TEXT
-    # ==========================================
     def set_scan(self, cam_id, text):
-        self.add_camera(cam_id)
-        self.states[cam_id]["scan_text"] = text
+        with self._changed:
+            self._ensure_camera_locked(cam_id)
+            self.states[cam_id]["scan_text"] = text
+            self._touch_locked(cam_id)
 
-    # ==========================================
-    # VIDEO FILE
-    # ==========================================
     def set_video(self, cam_id, file_path):
-        self.add_camera(cam_id)
-        self.states[cam_id]["video_file"] = file_path
+        with self._changed:
+            self._ensure_camera_locked(cam_id)
+            self.states[cam_id]["video_file"] = file_path
+            self._touch_locked(cam_id)
 
-    # ==========================================
-    # ERROR
-    # ==========================================
     def set_error(self, cam_id, msg):
-        self.add_camera(cam_id)
-        self.states[cam_id]["error"] = msg
+        with self._changed:
+            self._ensure_camera_locked(cam_id)
+            self.states[cam_id]["error"] = msg
+            self._touch_locked(cam_id)
 
     def clear_error(self, cam_id):
-        self.add_camera(cam_id)
-        self.states[cam_id]["error"] = ""
+        with self._changed:
+            self._ensure_camera_locked(cam_id)
+            if not self.states[cam_id]["error"]:
+                return
+            self.states[cam_id]["error"] = ""
+            self._touch_locked(cam_id)

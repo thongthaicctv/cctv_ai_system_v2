@@ -10,9 +10,9 @@ from utils.url_helper import camera_rtsp_url, open_rtsp_capture
 
 
 DEFAULT_RECORD_AUTO_STOP_SECONDS = 300
-IDLE_POLL_INTERVAL_SECONDS = 0.25
+WAIT_RECORD_UPDATE_TIMEOUT_SECONDS = 1.0
 RETRY_DELAY_SECONDS = 1.0
-FRAME_WRITE_DELAY_SECONDS = 0.001
+FRAME_WRITE_DELAY_SECONDS = 0.0
 
 
 class RecordWorker:
@@ -34,12 +34,18 @@ class RecordWorker:
         cam_id = self.cam["id"]
 
         while self.running:
-            snapshot = dict(self.state.get(cam_id))
-
+            snapshot = self.state.get(cam_id)
             if not snapshot.get("recording") or not snapshot.get("order_code"):
                 self._close_session("STOP")
-                time.sleep(IDLE_POLL_INTERVAL_SECONDS)
-                continue
+                snapshot = self.state.wait_for_record_update(
+                    cam_id,
+                    snapshot.get("record_version", 0),
+                    timeout=WAIT_RECORD_UPDATE_TIMEOUT_SECONDS,
+                )
+                if not self.running:
+                    break
+                if not snapshot.get("recording") or not snapshot.get("order_code"):
+                    continue
 
             if self.writer is None or self.capture is None:
                 if not self._open_session(snapshot):
@@ -57,7 +63,6 @@ class RecordWorker:
             if self._auto_stop_due():
                 self._close_session("AUTO")
                 self.state.stop_record(cam_id, clear_employee=False)
-                time.sleep(IDLE_POLL_INTERVAL_SECONDS)
                 continue
 
             if not self._write_next_frame():
@@ -67,7 +72,8 @@ class RecordWorker:
                 time.sleep(RETRY_DELAY_SECONDS)
                 continue
 
-            time.sleep(FRAME_WRITE_DELAY_SECONDS)
+            if FRAME_WRITE_DELAY_SECONDS > 0:
+                time.sleep(FRAME_WRITE_DELAY_SECONDS)
 
         self._close_session("STOP")
 
