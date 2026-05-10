@@ -259,7 +259,7 @@ def generate_html_report(storage_path: str = None) -> str:
     - Lọc được theo Camera / Ngày / Mã đơn / Nhân viên
     """
     base  = storage_path or _storage_path()
-    index = build_index(base)
+    index = load_index(base)
     vids  = index.get("videos", [])
 
     # ── Options cho filter camera ──
