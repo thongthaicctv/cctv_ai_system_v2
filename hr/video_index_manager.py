@@ -366,15 +366,17 @@ def generate_html_report(storage_path: str = None) -> str:
         rows += (
             f'<tr data-cam="{cam_id}" data-date="{date}" '
             f'data-order="{order.lower()}" data-emp="{emp.lower()}">\n'
+            
             f'  <td><span class="badge">{cam_id}</span></td>\n'
-            f'  <td class="cam-name">{cam_nm}</td>\n'
-            f'  <td>{date}</td>\n'
-            f'  <td>{time}</td>\n'
-            f'  <td>{dur_txt}</td>\n'
             f'  <td class="order-col">{order}</td>\n'
             f'  <td>{emp}</td>\n'
             f'  <td>{dept}</td>\n'
+            f'  <td>{date}</td>\n'
+            f'  <td>{time}</td>\n'
+            f'  <td>{dur_txt}</td>\n'
             f'  <td>{sz} MB</td>\n'
+
+
             f'  <td>\n'
             f'    <button class="bp" onclick="pv(\'{play_url}\',\'{fname}\')">&#9654; Ph&#225;t</button>\n'
             f'    <a class="bd" href="{play_url}" download="{fname_dl}">&#11015; T&#7843;i</a>\n'
@@ -382,7 +384,7 @@ def generate_html_report(storage_path: str = None) -> str:
             f'</tr>\n'
         )
 
-    empty_row = ('<tr><td colspan="10" style="text-align:center;padding:48px;color:#64748b">'
+    empty_row = ('<tr><td colspan="9" style="text-align:center;padding:48px;color:#64748b">'
                  'Ch&#432;a c&#243; video n&#224;o trong th&#432; m&#7909;c n&#224;y.</td></tr>')
 
     html = f"""<!DOCTYPE html>
@@ -482,16 +484,19 @@ td{{padding:9px 11px;vertical-align:middle}}
   <table>
     <thead>
       <tr>
-        <th>Camera ID</th>
-        <th>T&#234;n Camera</th>
-        <th>Ng&#224;y</th>
-        <th>Gi&#7901;</th>
-        <th>Th&#7901;i l&#432;&#7907;ng</th>
-        <th>M&#227; &#273;&#417;n</th>
-        <th>Nh&#226;n vi&#234;n</th>
-        <th>B&#7897; ph&#7853;n</th>
-        <th>Dung l&#432;&#7907;ng</th>
-        <th>Thao t&#225;c</th>
+
+
+        <th>ID camera</th>
+        <th>Mã đơn</th>
+        <th>Nhân viên</th>
+        <th>Bộ phận</th>
+        <th>Ngày</th>
+        <th>Giờ</th>
+        <th>Thời lượng</th>
+        <th>Dung lượng</th>
+        <th>Thao tác</th>
+
+
       </tr>
     </thead>
     <tbody id="tb">

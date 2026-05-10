@@ -4,9 +4,7 @@
     "record_auto_stop_seconds": 900,
     "record_mapping": {
         "1": [
-            "2",
-            "3",
-            "4"
+            "1"
         ],
         "2": [
             "2"
@@ -18,6 +16,8 @@
             "4"
         ]
     },
+    "cleanup_enabled": true,
+    "keep_index_days": 3,
     "cameras": [
         {
             "id": "1",
@@ -55,7 +55,5 @@
             "area": "Si",
             "enabled": true
         }
-    ],
-    "cleanup_enabled": true,
-    "keep_index_days": 3
+    ]
 }

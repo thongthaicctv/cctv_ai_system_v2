@@ -125,5 +125,21 @@
     "note": "",
     "join_date": "2026-05-08",
     "avatar_color": "#607D8B"
+  },
+  {
+    "id": "nv3",
+    "name": "mạnh",
+    "position": "đóng hàng ecom",
+    "department": "ecom",
+    "phone": "090",
+    "email": "090@gmail.com",
+    "camera_zone": [
+      "ecom"
+    ],
+    "shift": "Ca sáng (6:00 - 14:00)",
+    "status": "active",
+    "note": "",
+    "join_date": "2026-05-10",
+    "avatar_color": "#607D8B"
   }
 ]

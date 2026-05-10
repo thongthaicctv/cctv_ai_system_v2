@@ -843,21 +843,21 @@ class _VideoTab(QWidget):
         rr.addStretch()
 
         self.report_from = QLineEdit()
-        self.report_from.setPlaceholderText("Từ ngày YYYY-MM-DD")
+        self.report_from.setPlaceholderText("Từ YYYY-MM-DD")
         self.report_from.setFixedWidth(145)
         self.report_from.setFixedHeight(34)
 
         self.report_to = QLineEdit()
-        self.report_to.setPlaceholderText("Đến ngày YYYY-MM-DD")
+        self.report_to.setPlaceholderText("Đến YYYY-MM-DD")
         self.report_to.setFixedWidth(145)
         self.report_to.setFixedHeight(34)
 
-        self.btn_report_total = QPushButton("📊 Xuất tổng thể")
+        self.btn_report_total = QPushButton("📊 Xuất file tổng hợp")
         self.btn_report_total.setStyleSheet(_BTN_PRIMARY)
         self.btn_report_total.setFixedHeight(34)
         self.btn_report_total.clicked.connect(self._export_report_total)
 
-        self.btn_report_employee = QPushButton("👤 Xuất theo nhân viên")
+        self.btn_report_employee = QPushButton("👤 Xuất file NV viên")
         self.btn_report_employee.setStyleSheet(_BTN_PRIMARY)
         self.btn_report_employee.setFixedHeight(34)
         self.btn_report_employee.clicked.connect(self._export_report_employee)
@@ -907,13 +907,22 @@ class _VideoTab(QWidget):
         
 
         # Table
-        cols = ["Camera", "Tên camera", "Ngày", "Giờ", "Thời lượng",
-                "Mã đơn", "Nhân viên", "Bộ phận", "Dung lượng", ""]
+        cols = [
+            "ID camera",
+            "Mã đơn",
+            "Nhân viên",
+            "Bộ phận",
+            "Ngày",
+            "Giờ",
+            "Thời lượng",
+            "Dung lượng",
+            ""
+        ]
         self.table = QTableWidget(0, len(cols))
         self.table.setHorizontalHeaderLabels(cols)
         hh = self.table.horizontalHeader()
         hh.setSectionResizeMode(QHeaderView.Stretch)
-        hh.setSectionResizeMode(9, QHeaderView.ResizeToContents)
+        hh.setSectionResizeMode(8, QHeaderView.ResizeToContents)
         self.table.verticalHeader().setVisible(False)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
@@ -1083,13 +1092,12 @@ class _VideoTab(QWidget):
 
             vals = [
                 (cam_item, None),
-                (QTableWidgetItem(v.get("camera_name", "")), None),
-                (QTableWidgetItem(date_disp), None),
-                (QTableWidgetItem(time_disp), None),
-                (QTableWidgetItem(dur_txt), None),
                 (order_item, None),
                 (QTableWidgetItem(emp), None),
                 (QTableWidgetItem(v.get("department", "—")), None),
+                (QTableWidgetItem(date_disp), None),
+                (QTableWidgetItem(time_disp), None),
+                (QTableWidgetItem(dur_txt), None),
                 (size_item, None),
             ]
             for c, (item, _) in enumerate(vals):
@@ -1110,7 +1118,7 @@ class _VideoTab(QWidget):
             
             b_dl.clicked.connect(lambda _, p=full_path, n=v.get("filename",""): self._download(p, n))
             ahl.addWidget(b_play); ahl.addWidget(b_dl)
-            self.table.setCellWidget(r, 9, aw)
+            self.table.setCellWidget(r, 8, aw)
 
     def _filter(self):
         kw    = self.f_kw.text().lower()

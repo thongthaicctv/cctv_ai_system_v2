@@ -1325,3 +1325,366 @@
 2026-05-10 11:53:56 | ======================================================================
 2026-05-10 11:54:02 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
 2026-05-10 11:54:03 | DEBUG-1 ONLINE
+2026-05-10 11:57:37 | ======================================================================
+2026-05-10 11:57:37 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 11:57:37 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 11:57:37 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 11:57:37 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 11:57:37 | ----------------------------------------------------------------------
+2026-05-10 11:57:37 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 11:57:37 | ======================================================================
+2026-05-10 11:57:43 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 11:57:44 | DEBUG-1 ONLINE
+2026-05-10 11:59:28 | DEBUG-1 OFFLINE
+2026-05-10 11:59:36 | DEBUG-1 ONLINE
+2026-05-10 12:00:00 | DEBUG-1 OFFLINE
+2026-05-10 12:00:08 | DEBUG-1 ONLINE
+2026-05-10 12:00:40 | DEBUG-1 OFFLINE
+2026-05-10 12:00:48 | DEBUG-1 ONLINE
+2026-05-10 12:00:56 | DEBUG-1 OFFLINE
+2026-05-10 12:01:04 | DEBUG-1 ONLINE
+2026-05-10 12:02:18 | ======================================================================
+2026-05-10 12:02:18 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 12:02:18 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 12:02:18 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 12:02:18 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 12:02:18 | ----------------------------------------------------------------------
+2026-05-10 12:02:18 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 12:02:18 | ======================================================================
+2026-05-10 12:02:25 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 12:02:25 | DEBUG-1 ONLINE
+2026-05-10 12:02:33 | DEBUG-1 OFFLINE
+2026-05-10 12:02:41 | DEBUG-1 ONLINE
+2026-05-10 12:18:40 | ======================================================================
+2026-05-10 12:18:40 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 12:18:40 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 12:18:40 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 12:18:40 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 12:18:40 | ----------------------------------------------------------------------
+2026-05-10 12:18:40 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 12:18:40 | ======================================================================
+2026-05-10 12:18:47 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 12:18:48 | DEBUG-1 ONLINE
+2026-05-10 12:20:47 | DEBUG-1 OFFLINE
+2026-05-10 12:20:55 | DEBUG-1 ONLINE
+2026-05-10 12:21:26 | ======================================================================
+2026-05-10 12:21:26 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 12:21:26 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 12:21:26 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 12:21:26 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 12:21:26 | ----------------------------------------------------------------------
+2026-05-10 12:21:26 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 12:21:26 | ======================================================================
+2026-05-10 12:21:33 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 12:21:33 | DEBUG-1 ONLINE
+2026-05-10 12:22:10 | ======================================================================
+2026-05-10 12:22:10 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 12:22:10 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 12:22:10 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 12:22:10 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 12:22:10 | ----------------------------------------------------------------------
+2026-05-10 12:22:10 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 12:22:10 | ======================================================================
+2026-05-10 12:22:16 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 12:22:17 | DEBUG-1 ONLINE
+2026-05-10 12:35:23 | ======================================================================
+2026-05-10 12:35:23 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 12:35:23 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 12:35:23 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 12:35:23 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 12:35:23 | ----------------------------------------------------------------------
+2026-05-10 12:35:23 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 12:35:23 | ======================================================================
+2026-05-10 12:35:32 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 12:35:33 | DEBUG-1 ONLINE
+2026-05-10 12:38:20 | Si-1 ONLINE
+2026-05-10 12:38:20 | Si-2 ONLINE
+2026-05-10 12:38:20 | Si-3 ONLINE
+2026-05-10 12:38:31 | CMD s01emp:vn1
+2026-05-10 12:38:44 | CMD s01emp:nv1
+2026-05-10 12:39:01 | CMD c01emp:nv1
+2026-05-10 12:39:09 | DEBUG-1 OFFLINE
+2026-05-10 12:39:09 | Si-1 OFFLINE
+2026-05-10 12:39:09 | Si-2 OFFLINE
+2026-05-10 12:39:09 | Si-3 OFFLINE
+2026-05-10 12:39:16 | DEBUG-1 ONLINE
+2026-05-10 12:39:16 | Si-1 ONLINE
+2026-05-10 12:39:16 | Si-2 ONLINE
+2026-05-10 12:39:16 | Si-3 ONLINE
+2026-05-10 12:39:26 | CMD s01test
+2026-05-10 12:39:44 | CMD s01stop
+2026-05-10 12:39:49 | DEBUG-1 OFFLINE
+2026-05-10 12:39:49 | Si-1 OFFLINE
+2026-05-10 12:39:49 | Si-2 OFFLINE
+2026-05-10 12:39:49 | Si-3 OFFLINE
+2026-05-10 12:39:51 | Si-2 START test
+2026-05-10 12:39:51 | Si-2 REC STOP test
+2026-05-10 12:39:56 | DEBUG-1 ONLINE
+2026-05-10 12:39:56 | Si-1 ONLINE
+2026-05-10 12:39:56 | Si-2 ONLINE
+2026-05-10 12:39:56 | Si-3 ONLINE
+2026-05-10 12:41:01 | DEBUG-1 OFFLINE
+2026-05-10 12:41:01 | Si-1 OFFLINE
+2026-05-10 12:41:01 | Si-2 OFFLINE
+2026-05-10 12:41:01 | Si-3 OFFLINE
+2026-05-10 12:41:12 | ======================================================================
+2026-05-10 12:41:12 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 12:41:12 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 12:41:12 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 12:41:12 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 12:41:12 | ----------------------------------------------------------------------
+2026-05-10 12:41:12 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 12:41:12 | ======================================================================
+2026-05-10 12:41:19 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 12:41:20 | DEBUG-1 ONLINE
+2026-05-10 12:41:20 | Si-1 ONLINE
+2026-05-10 12:41:20 | Si-2 ONLINE
+2026-05-10 12:41:20 | Si-3 ONLINE
+2026-05-10 12:41:28 | DEBUG-1 OFFLINE
+2026-05-10 12:41:28 | Si-1 OFFLINE
+2026-05-10 12:41:28 | Si-2 OFFLINE
+2026-05-10 12:41:28 | Si-3 OFFLINE
+2026-05-10 12:41:36 | DEBUG-1 ONLINE
+2026-05-10 12:41:36 | Si-1 ONLINE
+2026-05-10 12:41:36 | Si-2 ONLINE
+2026-05-10 12:41:36 | Si-3 ONLINE
+2026-05-10 12:41:52 | DEBUG-1 OFFLINE
+2026-05-10 12:41:52 | Si-1 OFFLINE
+2026-05-10 12:41:52 | Si-2 OFFLINE
+2026-05-10 12:41:52 | Si-3 OFFLINE
+2026-05-10 12:42:14 | CMD s01nv2
+2026-05-10 12:42:19 | DEBUG-1 START nv2
+2026-05-10 12:42:23 | DEBUG-1 ONLINE
+2026-05-10 12:42:23 | Si-1 ONLINE
+2026-05-10 12:42:23 | Si-2 ONLINE
+2026-05-10 12:42:23 | Si-3 ONLINE
+2026-05-10 12:42:26 | DEBUG-1 REC STOP nv2
+2026-05-10 12:42:26 | CMD s01stop
+2026-05-10 12:42:34 | CMD s01emp:nv2
+2026-05-10 12:42:47 | CMD s01test luu nhan vien 2
+2026-05-10 12:42:48 | DEBUG-1 START test luu nhan vien 2
+2026-05-10 12:42:59 | CMD s01stop
+2026-05-10 12:42:59 | DEBUG-1 REC STOP test luu nhan vien 2
+2026-05-10 12:43:04 | DEBUG-1 OFFLINE
+2026-05-10 12:43:04 | Si-1 OFFLINE
+2026-05-10 12:43:04 | Si-2 OFFLINE
+2026-05-10 12:43:04 | Si-3 OFFLINE
+2026-05-10 12:43:11 | DEBUG-1 ONLINE
+2026-05-10 12:43:11 | Si-1 ONLINE
+2026-05-10 12:43:11 | Si-2 ONLINE
+2026-05-10 12:43:11 | Si-3 ONLINE
+2026-05-10 12:43:20 | DEBUG-1 OFFLINE
+2026-05-10 12:43:20 | Si-1 OFFLINE
+2026-05-10 12:43:20 | Si-2 OFFLINE
+2026-05-10 12:43:20 | Si-3 OFFLINE
+2026-05-10 12:43:27 | DEBUG-1 ONLINE
+2026-05-10 12:43:27 | Si-1 ONLINE
+2026-05-10 12:43:27 | Si-2 ONLINE
+2026-05-10 12:43:27 | Si-3 ONLINE
+2026-05-10 12:44:08 | DEBUG-1 OFFLINE
+2026-05-10 12:44:08 | Si-1 OFFLINE
+2026-05-10 12:44:08 | Si-2 OFFLINE
+2026-05-10 12:44:08 | Si-3 OFFLINE
+2026-05-10 12:44:16 | Si-1 ONLINE
+2026-05-10 12:44:16 | Si-2 ONLINE
+2026-05-10 12:44:16 | Si-3 ONLINE
+2026-05-10 12:44:24 | DEBUG-1 ONLINE
+2026-05-10 12:46:48 | DEBUG-1 OFFLINE
+2026-05-10 12:46:48 | Si-1 OFFLINE
+2026-05-10 12:46:48 | Si-2 OFFLINE
+2026-05-10 12:46:48 | Si-3 OFFLINE
+2026-05-10 12:47:04 | DEBUG-1 ONLINE
+2026-05-10 12:47:04 | Si-1 ONLINE
+2026-05-10 12:47:04 | Si-2 ONLINE
+2026-05-10 12:47:04 | Si-3 ONLINE
+2026-05-10 12:47:20 | DEBUG-1 OFFLINE
+2026-05-10 12:47:20 | Si-1 OFFLINE
+2026-05-10 12:47:20 | Si-2 OFFLINE
+2026-05-10 12:47:20 | Si-3 OFFLINE
+2026-05-10 12:47:28 | DEBUG-1 ONLINE
+2026-05-10 12:47:28 | Si-1 ONLINE
+2026-05-10 12:47:28 | Si-2 ONLINE
+2026-05-10 12:47:28 | Si-3 ONLINE
+2026-05-10 12:48:08 | DEBUG-1 OFFLINE
+2026-05-10 12:48:08 | Si-1 OFFLINE
+2026-05-10 12:48:08 | Si-2 OFFLINE
+2026-05-10 12:48:08 | Si-3 OFFLINE
+2026-05-10 12:48:16 | DEBUG-1 ONLINE
+2026-05-10 12:48:16 | Si-1 ONLINE
+2026-05-10 12:48:16 | Si-2 ONLINE
+2026-05-10 12:48:16 | Si-3 ONLINE
+2026-05-10 12:48:48 | DEBUG-1 OFFLINE
+2026-05-10 12:48:56 | DEBUG-1 ONLINE
+2026-05-10 12:49:04 | DEBUG-1 OFFLINE
+2026-05-10 12:49:04 | Si-1 OFFLINE
+2026-05-10 12:49:04 | Si-2 OFFLINE
+2026-05-10 12:49:04 | Si-3 OFFLINE
+2026-05-10 12:49:12 | DEBUG-1 ONLINE
+2026-05-10 12:49:12 | Si-1 ONLINE
+2026-05-10 12:49:12 | Si-2 ONLINE
+2026-05-10 12:49:12 | Si-3 ONLINE
+2026-05-10 12:50:00 | DEBUG-1 OFFLINE
+2026-05-10 12:50:08 | DEBUG-1 ONLINE
+2026-05-10 12:50:38 | ======================================================================
+2026-05-10 12:50:38 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 12:50:38 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 12:50:38 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 12:50:38 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 12:50:38 | ----------------------------------------------------------------------
+2026-05-10 12:50:38 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 12:50:38 | ======================================================================
+2026-05-10 12:50:54 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 12:51:02 | DEBUG-1 ONLINE
+2026-05-10 12:51:02 | Si-1 ONLINE
+2026-05-10 12:51:02 | Si-2 ONLINE
+2026-05-10 12:51:02 | Si-3 ONLINE
+2026-05-10 12:51:58 | DEBUG-1 OFFLINE
+2026-05-10 12:51:58 | Si-1 OFFLINE
+2026-05-10 12:51:58 | Si-2 OFFLINE
+2026-05-10 12:51:58 | Si-3 OFFLINE
+2026-05-10 12:52:06 | DEBUG-1 ONLINE
+2026-05-10 12:52:06 | Si-1 ONLINE
+2026-05-10 12:52:06 | Si-2 ONLINE
+2026-05-10 12:52:06 | Si-3 ONLINE
+2026-05-10 12:55:55 | ======================================================================
+2026-05-10 12:55:55 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 12:55:55 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 12:55:55 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 12:55:55 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 12:55:55 | ----------------------------------------------------------------------
+2026-05-10 12:55:55 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 12:55:55 | ======================================================================
+2026-05-10 12:56:21 | ======================================================================
+2026-05-10 12:56:21 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 12:56:21 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 12:56:21 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 12:56:21 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 12:56:21 | ----------------------------------------------------------------------
+2026-05-10 12:56:21 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 12:56:21 | ======================================================================
+2026-05-10 12:58:17 | ======================================================================
+2026-05-10 12:58:17 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 12:58:17 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 12:58:17 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 12:58:17 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 12:58:17 | ----------------------------------------------------------------------
+2026-05-10 12:58:17 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 12:58:17 | ======================================================================
+2026-05-10 12:58:24 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 12:58:24 | DEBUG-1 ONLINE
+2026-05-10 12:58:24 | Si-1 ONLINE
+2026-05-10 12:58:24 | Si-2 ONLINE
+2026-05-10 12:58:24 | Si-3 ONLINE
+2026-05-10 12:58:33 | DEBUG-1 OFFLINE
+2026-05-10 12:58:33 | Si-1 OFFLINE
+2026-05-10 12:58:33 | Si-2 OFFLINE
+2026-05-10 12:58:33 | Si-3 OFFLINE
+2026-05-10 12:58:48 | DEBUG-1 ONLINE
+2026-05-10 12:58:48 | Si-1 ONLINE
+2026-05-10 12:58:48 | Si-2 ONLINE
+2026-05-10 12:58:48 | Si-3 ONLINE
+2026-05-10 12:59:05 | DEBUG-1 OFFLINE
+2026-05-10 12:59:05 | Si-1 OFFLINE
+2026-05-10 12:59:05 | Si-2 OFFLINE
+2026-05-10 12:59:05 | Si-3 OFFLINE
+2026-05-10 12:59:12 | DEBUG-1 ONLINE
+2026-05-10 12:59:12 | Si-1 ONLINE
+2026-05-10 12:59:12 | Si-2 ONLINE
+2026-05-10 12:59:12 | Si-3 ONLINE
+2026-05-10 12:59:29 | DEBUG-1 OFFLINE
+2026-05-10 12:59:29 | Si-1 OFFLINE
+2026-05-10 12:59:29 | Si-2 OFFLINE
+2026-05-10 12:59:29 | Si-3 OFFLINE
+2026-05-10 12:59:44 | DEBUG-1 ONLINE
+2026-05-10 12:59:44 | Si-1 ONLINE
+2026-05-10 12:59:44 | Si-2 ONLINE
+2026-05-10 12:59:44 | Si-3 ONLINE
+2026-05-10 12:59:53 | DEBUG-1 OFFLINE
+2026-05-10 12:59:53 | Si-1 OFFLINE
+2026-05-10 12:59:53 | Si-2 OFFLINE
+2026-05-10 12:59:53 | Si-3 OFFLINE
+2026-05-10 13:00:01 | DEBUG-1 ONLINE
+2026-05-10 13:00:01 | Si-1 ONLINE
+2026-05-10 13:00:01 | Si-2 ONLINE
+2026-05-10 13:00:01 | Si-3 ONLINE
+2026-05-10 13:00:09 | DEBUG-1 OFFLINE
+2026-05-10 13:00:09 | Si-1 OFFLINE
+2026-05-10 13:00:09 | Si-2 OFFLINE
+2026-05-10 13:00:09 | Si-3 OFFLINE
+2026-05-10 13:00:24 | DEBUG-1 ONLINE
+2026-05-10 13:00:24 | Si-1 ONLINE
+2026-05-10 13:00:24 | Si-2 ONLINE
+2026-05-10 13:00:24 | Si-3 ONLINE
+2026-05-10 13:00:41 | Si-1 OFFLINE
+2026-05-10 13:00:41 | Si-2 OFFLINE
+2026-05-10 13:00:41 | Si-3 OFFLINE
+2026-05-10 13:00:48 | Si-1 ONLINE
+2026-05-10 13:00:48 | Si-2 ONLINE
+2026-05-10 13:00:48 | Si-3 ONLINE
+2026-05-10 13:00:57 | DEBUG-1 OFFLINE
+2026-05-10 13:00:57 | Si-1 OFFLINE
+2026-05-10 13:00:57 | Si-2 OFFLINE
+2026-05-10 13:00:57 | Si-3 OFFLINE
+2026-05-10 13:01:04 | DEBUG-1 ONLINE
+2026-05-10 13:01:04 | Si-1 ONLINE
+2026-05-10 13:01:04 | Si-2 ONLINE
+2026-05-10 13:01:04 | Si-3 ONLINE
+2026-05-10 13:01:13 | DEBUG-1 OFFLINE
+2026-05-10 13:01:13 | Si-1 OFFLINE
+2026-05-10 13:01:13 | Si-2 OFFLINE
+2026-05-10 13:01:13 | Si-3 OFFLINE
+2026-05-10 13:01:28 | DEBUG-1 ONLINE
+2026-05-10 13:01:28 | Si-1 ONLINE
+2026-05-10 13:01:28 | Si-2 ONLINE
+2026-05-10 13:01:28 | Si-3 ONLINE
+2026-05-10 13:02:01 | DEBUG-1 OFFLINE
+2026-05-10 13:02:01 | Si-1 OFFLINE
+2026-05-10 13:02:01 | Si-2 OFFLINE
+2026-05-10 13:02:01 | Si-3 OFFLINE
+2026-05-10 13:02:16 | DEBUG-1 ONLINE
+2026-05-10 13:02:16 | Si-1 ONLINE
+2026-05-10 13:02:16 | Si-2 ONLINE
+2026-05-10 13:02:16 | Si-3 ONLINE
+2026-05-10 13:03:21 | DEBUG-1 OFFLINE
+2026-05-10 13:03:21 | Si-1 OFFLINE
+2026-05-10 13:03:21 | Si-2 OFFLINE
+2026-05-10 13:03:21 | Si-3 OFFLINE
+2026-05-10 13:03:28 | DEBUG-1 ONLINE
+2026-05-10 13:03:28 | Si-1 ONLINE
+2026-05-10 13:03:28 | Si-2 ONLINE
+2026-05-10 13:03:28 | Si-3 ONLINE
+2026-05-10 13:03:37 | Si-1 OFFLINE
+2026-05-10 13:03:37 | Si-2 OFFLINE
+2026-05-10 13:03:37 | Si-3 OFFLINE
+2026-05-10 13:03:44 | Si-1 ONLINE
+2026-05-10 13:03:44 | Si-2 ONLINE
+2026-05-10 13:03:44 | Si-3 ONLINE
+2026-05-10 13:03:53 | DEBUG-1 OFFLINE
+2026-05-10 13:03:53 | Si-1 OFFLINE
+2026-05-10 13:03:53 | Si-2 OFFLINE
+2026-05-10 13:03:53 | Si-3 OFFLINE
+2026-05-10 13:04:01 | DEBUG-1 ONLINE
+2026-05-10 13:04:01 | Si-1 ONLINE
+2026-05-10 13:04:01 | Si-2 ONLINE
+2026-05-10 13:04:01 | Si-3 ONLINE
+2026-05-10 13:11:04 | ======================================================================
+2026-05-10 13:11:04 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 13:11:04 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=D:/Video 2
+2026-05-10 13:11:04 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 13:11:04 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 13:11:04 | ----------------------------------------------------------------------
+2026-05-10 13:11:04 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 13:11:04 | ======================================================================
+2026-05-10 13:11:11 | OpenCV acceleration: OpenCL GPU (Intel(R) Corporation / Intel(R) UHD Graphics 620)
+2026-05-10 13:11:12 | DEBUG-1 ONLINE
+2026-05-10 13:11:12 | Si-1 ONLINE
+2026-05-10 13:11:12 | Si-2 ONLINE
+2026-05-10 13:11:12 | Si-3 ONLINE
+2026-05-10 13:11:20 | DEBUG-1 OFFLINE
+2026-05-10 13:11:20 | Si-1 OFFLINE
+2026-05-10 13:11:20 | Si-2 OFFLINE
+2026-05-10 13:11:20 | Si-3 OFFLINE
+2026-05-10 13:11:35 | DEBUG-1 ONLINE
+2026-05-10 13:11:35 | Si-1 ONLINE
+2026-05-10 13:11:35 | Si-2 ONLINE
+2026-05-10 13:11:35 | Si-3 ONLINE
