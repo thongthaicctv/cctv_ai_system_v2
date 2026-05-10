@@ -2283,3 +2283,48 @@
 2026-05-10 21:53:09 | ======================================================================
 2026-05-10 21:53:21 | [GPU] OpenCV acceleration: OpenCL dGPU (NVIDIA Corporation / Quadro K4200)
 2026-05-10 21:53:21 | DEBUG-1 ONLINE
+2026-05-10 22:34:45 | ======================================================================
+2026-05-10 22:34:45 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 22:34:45 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=G:/ProVideoAiSystem
+2026-05-10 22:34:45 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 22:34:45 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 22:34:45 | ----------------------------------------------------------------------
+2026-05-10 22:34:45 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 22:34:45 | ======================================================================
+2026-05-10 22:34:59 | [GPU] OpenCV acceleration: OpenCL dGPU (NVIDIA Corporation / Quadro K4200)
+2026-05-10 22:34:59 | DEBUG-1 ONLINE
+2026-05-10 22:36:52 | ======================================================================
+2026-05-10 22:36:52 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 22:36:52 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=G:/ProVideoAiSystem
+2026-05-10 22:36:52 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 22:36:52 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 22:36:52 | ----------------------------------------------------------------------
+2026-05-10 22:36:52 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 22:36:52 | ======================================================================
+2026-05-10 22:37:02 | [GPU] OpenCV acceleration: OpenCL dGPU (NVIDIA Corporation / Quadro K4200)
+2026-05-10 22:37:02 | DEBUG-1 ONLINE
+2026-05-10 22:37:34 | ======================================================================
+2026-05-10 22:37:34 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 22:37:34 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=G:/ProVideoAiSystem
+2026-05-10 22:37:34 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 22:37:34 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 22:37:34 | ----------------------------------------------------------------------
+2026-05-10 22:37:34 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 22:37:34 | ======================================================================
+2026-05-10 22:37:44 | [GPU] OpenCV acceleration: OpenCL dGPU (NVIDIA Corporation / Quadro K4200)
+2026-05-10 22:37:44 | DEBUG-1 ONLINE
+2026-05-10 22:37:57 | CMD s01emp:000001
+2026-05-10 22:38:06 | CMD s01tesluuindexlan2
+2026-05-10 22:38:10 | DEBUG-1 START tesluuindexlan2
+2026-05-10 22:38:13 | CMD s01stop
+2026-05-10 22:38:13 | DEBUG-1 REC STOP tesluuindexlan2
+2026-05-10 22:38:24 | ======================================================================
+2026-05-10 22:38:24 | [CLEANUP START] Dọn dẹp video + index theo ngày
+2026-05-10 22:38:24 | [CLEANUP CONFIG] enabled=True | keep_days=3 | storage=G:/ProVideoAiSystem
+2026-05-10 22:38:24 | [CLEANUP LIMIT] Giữ từ ngày 2026-05-08 trở về sau
+2026-05-10 22:38:24 | [CLEANUP LIMIT] Xoá trước ngày 2026-05-08
+2026-05-10 22:38:24 | ----------------------------------------------------------------------
+2026-05-10 22:38:24 | [CLEANUP DONE] Video xoá=0 | Index xoá=0 | Folder xoá=0 | Video thiếu=0 | Lỗi=0 | Giải phóng=0.0 MB
+2026-05-10 22:38:24 | ======================================================================
+2026-05-10 22:38:35 | [GPU] OpenCV acceleration: OpenCL dGPU (NVIDIA Corporation / Quadro K4200)
+2026-05-10 22:38:35 | DEBUG-1 ONLINE

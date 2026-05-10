@@ -10,6 +10,9 @@ from core.config_manager import load_config
 from core.resource_paths import resource_path
 from services.cleanup_service import cleanup_index_and_video_sync
 
+
+from hr.video_index_manager import build_index, generate_html_report
+
 # =========================
 # EXE RUNTIME PATH
 # =========================
@@ -53,23 +56,43 @@ def main():
 
     init_report_db()
 
-
     # =========================
-    # CLEANUP OLD VIDEOS
-    # Chỉ chạy 1 lần khi mở app
+    # STARTUP VIDEO MAINTENANCE
+    # Chạy 1 lần khi khởi động app
     # =========================
 
     cfg = load_config(force=True)
+    storage_path = cfg.get("storage_path", "recordings")
 
-    print("STORAGE =", cfg.get("storage_path"))
-    print("KEEP INDEX DAYS =", cfg.get("keep_index_days"))
+    print("STORAGE =", storage_path)
     print("CLEANUP ENABLED =", cfg.get("cleanup_enabled"))
+    print("KEEP INDEX DAYS =", cfg.get("keep_index_days"))
 
+    # 1. Cleanup trước
     cleanup_index_and_video_sync(
-        storage_path=cfg.get("storage_path", "recordings"),
-        keep_days=int(cfg.get("keep_index_days", 240)),
+        storage_path=storage_path,
+        keep_days=int(cfg.get("keep_index_days", 180)),
         enabled=bool(cfg.get("cleanup_enabled", False))
     )
+
+    # 2. Update index sau khi cleanup
+    try:
+        print("[STARTUP INDEX] Updating index...")
+        build_index(storage_path)
+        print("[STARTUP INDEX] Done")
+    except Exception as e:
+        print("[STARTUP INDEX ERROR]", e)
+
+    # 3. Update HTML sau khi update index
+    try:
+        print("[STARTUP HTML] Updating index.html...")
+        generate_html_report(storage_path)
+        print("[STARTUP HTML] Done")
+    except Exception as e:
+        print("[STARTUP HTML ERROR]", e)
+
+
+   
 
     # =========================
     # LICENSE CHECK
